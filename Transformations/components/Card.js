@@ -60,35 +60,42 @@ export default ({ type }) => {
   const navigation = useNavigation();
   let source;
   let page;
+  let title;
   let textSub;
   switch (type) {
     case Cards.Card1:
       page = "Quy định tuyển sinh";
+      title = "Quy định \ntuyển sinh";
       textSub = "Các bài viết liên quan đến luật";
-      source = require("../assets/pink.jpg");
+      source = require("../assets/blue.jpg");
       break;
     case Cards.Card2:
       page = "Thông tin tuyển sinh";
+      title = "Thông tin \ntuyển sinh";
       textSub = "Thông tin, phân tuyến, chỉ tiêu kế hoạch từng trường";
-      source = require("../assets/orange.jpg");
+      source = require("../assets/yellow.jpg");
       break;
     case Cards.Card3:
       page = "Đăng ký tuyển sinh";
+      title = "Đăng ký \ntuyển sinh";
       textSub = "Tuyển sinh đầu cấp cho học sinh";
-      source = require("../assets/blue.jpg");
+      source = require("../assets/pink.jpg");
       break;
     case Cards.Card4:
       page = "Tra cứu kết quả tuyển sinh";
+      title = "Tra cứu kết quả tuyển sinh";
       textSub = "Tra cứu kết quả tuyển sinh";
       source = require("../assets/purple.jpg");
       break;
     case Cards.Card5:
       page = "Hướng dẫn đăng ký trực tuyến";
+      title = "Hướng dẫn đăng ký trực tuyến";
       textSub = "Hướng dẫn đăng ký trực tuyến";
-      source = require("../assets/yellow.jpg");
+      source = require("../assets/orange.jpg");
       break;
     case Cards.Card6:
       page = "Góp ý";
+      title = "Góp ý";
       textSub = "Tổng hợp các ý kiến phản ánh của công dân";
       source = require("../assets/white.jpg");
       break;
@@ -107,7 +114,7 @@ export default ({ type }) => {
         imageStyle={styles.image}
         blurRadius={1.5}
       >
-        <Text style={styles.textMain}>{page}</Text>
+        <Text style={styles.textMain}>{title}</Text>
         <Text style={styles.textSub}>{textSub}</Text>
       </ImageBackground>
     </TouchableOpacity>
