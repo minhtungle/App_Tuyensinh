@@ -3,8 +3,6 @@ import { Text, StyleSheet, View } from "react-native";
 
 export default function Ketqua({ route }) {
   const { data } = route.params;
-  // const thongtin = JSON.stringify(data);
-  // HS7917
   return (
     <View style={styles.container}>
       <View style={styles.title1}>

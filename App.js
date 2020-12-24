@@ -1,14 +1,5 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Pressable,
-  SafeAreaView,
-  ImageBackground,
-} from "react-native";
+import { View, ImageBackground } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, HeaderTitle } from "@react-navigation/stack";
 
@@ -125,6 +116,17 @@ export default function App() {
           component={Gopy}
           options={{
             title: "Góp ý",
+            headerTitleStyle: {
+              alignSelf: "center",
+              marginRight: "18%",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Ketqua"
+          component={Ketqua}
+          options={{
+            title: "Kết quả",
             headerTitleStyle: {
               alignSelf: "center",
               marginRight: "18%",
