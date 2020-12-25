@@ -9,6 +9,7 @@ import Thongtintuyensinh from "./Screen/Thongtintuyensinh/Thongtintuyensinh";
 //* Đăng ký tuyển sinh
 import Dangkytuyensinh from "./Screen/Dangkytuyensinh/Dangkytuyensinh";
 import Trangdangky from "./Screen/Dangkytuyensinh/Trangdangky";
+import Images from "./Screen/Dangkytuyensinh/Images";
 
 //* Tra cứu tuyển sinh
 import Tracuuketquatuyensinh from "./Screen/Tracuuketquatuyensinh/Tracuuketquatuyensinh";
@@ -53,6 +54,7 @@ export default function App() {
             },
           }}
         />
+        {/* Quy định tuyển sinh */}
         <Stack.Screen
           name="Quy định tuyển sinh"
           component={Quydinhtuyensinh}
@@ -64,6 +66,7 @@ export default function App() {
             },
           }}
         />
+        {/* Thông tin tuyển sinh */}
         <Stack.Screen
           name="Thông tin tuyển sinh"
           component={Thongtintuyensinh}
@@ -75,6 +78,7 @@ export default function App() {
             },
           }}
         />
+        {/* Đăng ký tuyển sinh */}
         <Stack.Screen
           name="Đăng ký tuyển sinh"
           component={Dangkytuyensinh}
@@ -86,6 +90,29 @@ export default function App() {
             },
           }}
         />
+        <Stack.Screen
+          name="Trangdangky"
+          component={Trangdangky}
+          options={{
+            title: "Đăng ký",
+            headerTitleStyle: {
+              alignSelf: "center",
+              marginRight: "18%",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Images"
+          component={Images}
+          options={{
+            title: "Images",
+            headerTitleStyle: {
+              alignSelf: "center",
+              marginRight: "18%",
+            },
+          }}
+        />
+        {/* Tra cứu kết quả tuyển sinh */}
         <Stack.Screen
           name="Tra cứu kết quả tuyển sinh"
           component={Tracuuketquatuyensinh}
@@ -101,28 +128,6 @@ export default function App() {
           }}
         />
         <Stack.Screen
-          name="Hướng dẫn đăng ký trực tuyến"
-          component={Huongdandangkytructuyen}
-          options={{
-            title: "Hướng dẫn đăng ký trực tuyến",
-            headerTitleStyle: {
-              alignSelf: "center",
-              marginRight: "18%",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="Góp ý"
-          component={Gopy}
-          options={{
-            title: "Góp ý",
-            headerTitleStyle: {
-              alignSelf: "center",
-              marginRight: "18%",
-            },
-          }}
-        />
-        <Stack.Screen
           name="Ketqua"
           component={Ketqua}
           options={{
@@ -133,11 +138,24 @@ export default function App() {
             },
           }}
         />
+        {/* Hướng dẫn đăng ký trực tuyến */}
         <Stack.Screen
-          name="Trangdangky"
-          component={Trangdangky}
+          name="Hướng dẫn đăng ký trực tuyến"
+          component={Huongdandangkytructuyen}
           options={{
-            title: "Đăng ký",
+            title: "Hướng dẫn đăng ký trực tuyến",
+            headerTitleStyle: {
+              alignSelf: "center",
+              marginRight: "18%",
+            },
+          }}
+        />
+        {/* Góp ý */}
+        <Stack.Screen
+          name="Góp ý"
+          component={Gopy}
+          options={{
+            title: "Góp ý",
             headerTitleStyle: {
               alignSelf: "center",
               marginRight: "18%",

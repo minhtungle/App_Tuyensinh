@@ -9,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
   Button,
+  Modal,
 } from "react-native";
 
 import RadioButtonRN from "radio-buttons-react-native";
@@ -17,9 +18,11 @@ import { IconButton, Colors } from "react-native-paper";
 import CheckBox from "@react-native-community/checkbox";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Trangdangky({ route }) {
   // const { DoiTuongTuyenSinh } = route.params;
+  const navigation = useNavigation();
   const [data, setData] = useState({
     MaHocSinh: "",
     MatKhau: "",
@@ -414,7 +417,7 @@ export default function Trangdangky({ route }) {
   //#endregion
   //* Ẩn hiện pass
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <ScrollView>
       <KeyboardAvoidingView behavior="padding">
@@ -600,13 +603,13 @@ export default function Trangdangky({ route }) {
                     }
                   />
                 </View>
-                {/*//! NƠI SINH ---------------------------------*/}
+                {/*//? NƠI SINH ---------------------------------*/}
                 <Text
                   style={{ fontSize: 18, fontWeight: "bold", margin: "2%" }}
                 >
                   NƠI SINH :
                 </Text>
-                {/*//! Tỉnh thành phố */}
+                {/*// Tỉnh thành phố */}
                 <View style={[styles.field, { zIndex: 11003 }]}>
                   <Text>
                     Chọn tỉnh/thành phố <Text style={{ color: "red" }}>*</Text>
@@ -629,7 +632,7 @@ export default function Trangdangky({ route }) {
                     })}
                   </Picker>
                 </View>
-                {/*//! Quận huyện */}
+                {/*// Quận huyện */}
                 <View style={[styles.field, { zIndex: 11002 }]}>
                   <Text>
                     Chọn quận/huyện <Text style={{ color: "red" }}>*</Text>
@@ -652,7 +655,7 @@ export default function Trangdangky({ route }) {
                     })}
                   </Picker>
                 </View>
-                {/*//! Phường xã */}
+                {/*// Phường xã */}
                 <View style={[styles.field, { zIndex: 11001 }]}>
                   <Text>
                     Chọn phường/xã <Text style={{ color: "red" }}>*</Text>
@@ -675,7 +678,7 @@ export default function Trangdangky({ route }) {
                     })}
                   </Picker>
                 </View>
-                {/*//! Số nhà đường */}
+                {/*// Số nhà đường */}
                 <View style={styles.field}>
                   <Text>Số nhà, đường</Text>
                   <TextInput
@@ -688,13 +691,13 @@ export default function Trangdangky({ route }) {
                   </TextInput>
                 </View>
 
-                {/*//! HỘ KHẨU THƯỜNG TRÚ ---------------------------------*/}
+                {/*//? HỘ KHẨU THƯỜNG TRÚ ---------------------------------*/}
                 <Text
                   style={{ fontSize: 18, fontWeight: "bold", margin: "2%" }}
                 >
                   HỘ KHẨU THƯỜNG TRÚ :
                 </Text>
-                {/*//! Tỉnh thành phố */}
+                {/*// Tỉnh thành phố */}
                 <View style={[styles.field, { zIndex: 10003 }]}>
                   <Text>
                     Chọn tỉnh/thành phố <Text style={{ color: "red" }}>*</Text>
@@ -717,7 +720,7 @@ export default function Trangdangky({ route }) {
                     })}
                   </Picker>
                 </View>
-                {/*//! Quận huyện */}
+                {/*// Quận huyện */}
                 <View style={[styles.field, { zIndex: 10002 }]}>
                   <Text>
                     Chọn quận/huyện <Text style={{ color: "red" }}>*</Text>
@@ -740,7 +743,7 @@ export default function Trangdangky({ route }) {
                     })}
                   </Picker>
                 </View>
-                {/*//! Phường xã */}
+                {/*// Phường xã */}
                 <View style={[styles.field, { zIndex: 10001 }]}>
                   <Text>
                     Chọn phường/xã <Text style={{ color: "red" }}>*</Text>
@@ -763,7 +766,7 @@ export default function Trangdangky({ route }) {
                     })}
                   </Picker>
                 </View>
-                {/*//! Số nhà đường */}
+                {/*// Số nhà đường */}
                 <View style={styles.field}>
                   <Text>Số nhà, đường</Text>
                   <TextInput
@@ -776,13 +779,13 @@ export default function Trangdangky({ route }) {
                   </TextInput>
                 </View>
 
-                {/*//! NƠI Ở HIỆN TẠI ---------------------------------*/}
+                {/*//? NƠI Ở HIỆN TẠI ---------------------------------*/}
                 <Text
                   style={{ fontSize: 18, fontWeight: "bold", margin: "2%" }}
                 >
                   NƠI Ở HIỆN TẠI :
                 </Text>
-                {/*//! Tỉnh thành phố */}
+                {/*// Tỉnh thành phố */}
                 <View style={[styles.field, { zIndex: 10003 }]}>
                   <Text>
                     Chọn tỉnh/thành phố <Text style={{ color: "red" }}>*</Text>
@@ -805,7 +808,7 @@ export default function Trangdangky({ route }) {
                     })}
                   </Picker>
                 </View>
-                {/*//! Quận huyện */}
+                {/*// Quận huyện */}
                 <View style={[styles.field, { zIndex: 10002 }]}>
                   <Text>
                     Chọn quận/huyện <Text style={{ color: "red" }}>*</Text>
@@ -828,7 +831,7 @@ export default function Trangdangky({ route }) {
                     })}
                   </Picker>
                 </View>
-                {/*//! Phường xã */}
+                {/*// Phường xã */}
                 <View style={[styles.field, { zIndex: 10001 }]}>
                   <Text>
                     Chọn phường/xã <Text style={{ color: "red" }}>*</Text>
@@ -851,7 +854,7 @@ export default function Trangdangky({ route }) {
                     })}
                   </Picker>
                 </View>
-                {/*//! Số nhà đường */}
+                {/*// Số nhà đường */}
                 <View style={styles.field}>
                   <Text>Số nhà, đường</Text>
                   <TextInput
@@ -932,24 +935,94 @@ export default function Trangdangky({ route }) {
                 {/* Đối tượng ưu tiên */}
                 <View style={[styles.field, { zIndex: 10003 }]}>
                   <Text>Đối tượng ưu tiên</Text>
-                  <Picker
-                    selectedValue={data.DoiTuongUuTien}
-                    style={{ height: 50, width: "100%" }}
-                    onValueChange={(itemValue, itemIndex) =>
-                      changeValuePicker({ DoiTuongUuTien: itemValue })
-                    }
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      borderLeftWidth: 0.5,
+                      borderBottomWidth: 0.5,
+                    }}
                   >
-                    {picker.DoiTuongUuTien.map((item, index) => {
-                      return (
-                        <Picker.Item
-                          key={index.toString()}
-                          label={item.name}
-                          value={item.id}
-                        />
-                      );
-                    })}
-                  </Picker>
+                    <Text
+                      style={{
+                        flexGrow: 1,
+                        alignSelf: "center",
 
+                        fontSize: 18,
+
+                        paddingLeft: 5,
+                      }}
+                    >
+                      0 mục đã chọn
+                    </Text>
+                    <IconButton
+                      icon="file"
+                      color={Colors.red500}
+                      size={20}
+                      onPress={() => setModalVisible(true)}
+                    />
+                  </View>
+                  <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                      Alert.alert("Modal has been closed.");
+                    }}
+                  >
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: 22,
+                      }}
+                    >
+                      <View
+                        style={{
+                          margin: 20,
+                          backgroundColor: "white",
+                          borderRadius: 20,
+                          padding: 35,
+                          alignItems: "center",
+                          shadowColor: "#000",
+                          shadowOffset: {
+                            width: 0,
+                            height: 2,
+                          },
+                          shadowOpacity: 0.25,
+                          shadowRadius: 3.84,
+                          elevation: 5,
+                        }}
+                      >
+                        <Text style={{ marginBottom: 15, textAlign: "center" }}>
+                          Hello World!
+                        </Text>
+
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: "#F194FF",
+                            borderRadius: 20,
+                            padding: 10,
+                            elevation: 2,
+                            backgroundColor: "#2196F3",
+                          }}
+                          onPress={() => {
+                            setModalVisible(!modalVisible);
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: "white",
+                              fontWeight: "bold",
+                              textAlign: "center",
+                            }}
+                          >
+                            Chấp nhận
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </Modal>
                   {/* Checkbox */}
                   <View
                     style={{
@@ -1003,7 +1076,10 @@ export default function Trangdangky({ route }) {
                       icon="camera"
                       color={Colors.red500}
                       size={25}
-                      onPress={() => _pickImg()}
+                      // onPress={() => _pickImg()}
+                      onPress={() => {
+                        navigation.navigate("Images");
+                      }}
                     />
                     {/*--------Camera--------*/}
                     <View
