@@ -24,7 +24,7 @@ export default function Trangdangky({ route }) {
     MaHocSinh: "",
     MatKhau: "",
     HoTen: "",
-    NgaySinh: Date.now(),
+    NgaySinh: new Date(),
     DanToc: "",
     GioiTinh: false,
 
@@ -394,9 +394,9 @@ export default function Trangdangky({ route }) {
     setShow(false);
   };
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
+    const currentDate = selectedDate || data.NgaySinh;
     setShow(Platform.OS === "ios");
-    setDate(currentDate);
+    changeValuePicker({ NgaySinh: currentDate });
   };
 
   const showMode = (currentMode) => {
@@ -516,29 +516,41 @@ export default function Trangdangky({ route }) {
                   <Text>
                     Ngày sinh <Text style={{ color: "red" }}>*</Text>
                   </Text>
-                  <View>
-                    <View>
-                      <Button
-                        onPress={showDatepicker}
-                        title="Show date picker!"
-                      />
-                    </View>
-                    <View>
-                      <Button
-                        onPress={showTimepicker}
-                        title="Show time picker!"
-                      />
-                    </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      borderLeftWidth: 0.5,
+                      borderBottomWidth: 0.5,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        flexGrow: 1,
+                        alignSelf: "center",
+
+                        fontSize: 18,
+
+                        paddingLeft: 5,
+                      }}
+                    >
+                      {data.NgaySinh.toDateString()}
+                    </Text>
+                    <IconButton
+                      icon="calendar"
+                      color={Colors.red500}
+                      size={18}
+                      onPress={showDatepicker}
+                    />
                     {show && (
                       <DateTimePicker
                         testID="dateTimePicker"
-                        value={date}
+                        value={data.NgaySinh}
                         mode={mode}
                         is24Hour={true}
                         display="default"
                         onChange={onChange}
-                        onConfirm={handleConfirm}
-                        onCancel={handleCancel}
+                        // onConfirm={handleConfirm}
+                        // onCancel={handleCancel}
                       />
                     )}
                   </View>
@@ -671,7 +683,9 @@ export default function Trangdangky({ route }) {
                     onChangeText={(value) =>
                       changeValuePicker({ DiaChiNS: value })
                     }
-                  ></TextInput>
+                  >
+                    {data.DiaChiNS}
+                  </TextInput>
                 </View>
 
                 {/*//! HỘ KHẨU THƯỜNG TRÚ ---------------------------------*/}
@@ -757,7 +771,9 @@ export default function Trangdangky({ route }) {
                     onChangeText={(value) =>
                       changeValuePicker({ DiaChiTT: value })
                     }
-                  ></TextInput>
+                  >
+                    {data.DiaChiTT}
+                  </TextInput>
                 </View>
 
                 {/*//! NƠI Ở HIỆN TẠI ---------------------------------*/}
@@ -843,7 +859,9 @@ export default function Trangdangky({ route }) {
                     onChangeText={(value) =>
                       changeValuePicker({ DiaChi: value })
                     }
-                  ></TextInput>
+                  >
+                    {data.DiaChi}
+                  </TextInput>
                 </View>
               </View>
             </View>
