@@ -8,12 +8,15 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  Button,
 } from "react-native";
+
 import RadioButtonRN from "radio-buttons-react-native";
 import { Picker } from "@react-native-picker/picker";
 import { IconButton, Colors } from "react-native-paper";
 import CheckBox from "@react-native-community/checkbox";
 import * as ImagePicker from "expo-image-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function Trangdangky({ route }) {
   // const { DoiTuongTuyenSinh } = route.params;
@@ -21,7 +24,7 @@ export default function Trangdangky({ route }) {
     MaHocSinh: "",
     MatKhau: "",
     HoTen: "",
-    NgaySinh: "",
+    NgaySinh: Date.now(),
     DanToc: "",
     GioiTinh: false,
 
@@ -31,13 +34,13 @@ export default function Trangdangky({ route }) {
     DiaChiNS: "",
 
     IDTinhTT: "",
-    IDQuanTT: "",
+    IDHuyenTT: "",
     IDXaNS: "",
     DiaChiTT: "",
 
     IDTinh: "",
-    IDQuan: "",
-    IDPhuong: "",
+    IDHuyen: "",
+    IDXa: "",
     DiaChi: "",
     NguyenVong: [
       {
@@ -71,40 +74,73 @@ export default function Trangdangky({ route }) {
     MailLienHe: "",
   });
   // console.log(data.NguyenVong);
-  //#region Picker: Dữ liệu - Thay đổi value khi chọn
+  //#region DropPicker: Dữ liệu - Thay đổi value khi chọn
   //* Dữ liệu trong dropDown
   const [picker, setPicker] = useState({
     DanToc: [
       {
-        id: "1",
-        name: "Kinh",
-      },
-      {
-        id: "2",
-        name: "Miền núi",
+        id: "0",
+        name: "Chọn dân tộc",
       },
     ],
-
+    // Nơi sinh
     IDTinhNS: [
       {
-        id: "1",
-        name: "HN",
-      },
-      {
-        id: "2",
-        name: "HCM",
+        id: "0",
+        name: "Chọn Tỉnh/Thành phố",
       },
     ],
-    IDHuyenNS: [],
-    IDXaNS: [],
-
-    IDTinhTT: [],
-    IDHuyenTT: [],
-    IDXaTT: [],
-
-    IDTinh: [],
-    IDHuyen: [],
-    IDXa: [],
+    IDHuyenNS: [
+      {
+        id: "0",
+        name: "Chọn Quận/Huyện",
+      },
+    ],
+    IDXaNS: [
+      {
+        id: "0",
+        name: "Chọn Phường/Xã",
+      },
+    ],
+    // Thường trú
+    IDTinhTT: [
+      {
+        id: "0",
+        name: "Chọn Tỉnh/Thành phố",
+      },
+    ],
+    IDHuyenTT: [
+      {
+        id: "0",
+        name: "Chọn Quận/Huyện",
+      },
+    ],
+    IDXaTT: [
+      {
+        id: "0",
+        name: "Chọn Phường/Xã",
+      },
+    ],
+    // Nơi ở
+    IDTinh: [
+      {
+        id: "0",
+        name: "Chọn Tỉnh/Thành phố",
+      },
+    ],
+    IDHuyen: [
+      {
+        id: "0",
+        name: "Chọn Quận/Huyện",
+      },
+    ],
+    IDXa: [
+      {
+        id: "0",
+        name: "Chọn Phường/Xã",
+      },
+    ],
+    DoiTuongUuTien: [],
   });
   //* Chọn giá trị cho Picker
   const changeValuePicker = (arg) => {
@@ -344,6 +380,38 @@ export default function Trangdangky({ route }) {
     });
   //#endregion
 
+  //#region DatePicker
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+
+  const handleConfirm = (selectedDate) => {
+    setShow(false);
+    onChange(selectedDate);
+  };
+
+  const handleCancel = () => {
+    setShow(false);
+  };
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const showTimepicker = () => {
+    showMode("time");
+  };
+  //#endregion
   //* Ẩn hiện pass
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
@@ -355,7 +423,14 @@ export default function Trangdangky({ route }) {
           <View style={styles.block}>
             <View style={styles.title}>
               <Text
-                style={{ fontSize: 20, fontWeight: "bold", color: "#145374" }}
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  color: "#145374",
+                  flexGrow: 1,
+                  textAlign: "center",
+                }}
+                numberOfLines={1}
               >
                 Thông tin học sinh
               </Text>
@@ -441,9 +516,32 @@ export default function Trangdangky({ route }) {
                   <Text>
                     Ngày sinh <Text style={{ color: "red" }}>*</Text>
                   </Text>
-                  <TextInput style={styles.textInput}>
-                    {data.NgaySinh}
-                  </TextInput>
+                  <View>
+                    <View>
+                      <Button
+                        onPress={showDatepicker}
+                        title="Show date picker!"
+                      />
+                    </View>
+                    <View>
+                      <Button
+                        onPress={showTimepicker}
+                        title="Show time picker!"
+                      />
+                    </View>
+                    {show && (
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={date}
+                        mode={mode}
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChange}
+                        onConfirm={handleConfirm}
+                        onCancel={handleCancel}
+                      />
+                    )}
+                  </View>
                 </View>
                 {/* Dân tộc */}
                 <View style={styles.field}>
@@ -558,7 +656,7 @@ export default function Trangdangky({ route }) {
                       return (
                         <Picker.Item
                           key={index.toString()}
-                          label={item.value}
+                          label={item.name}
                           value={item.id}
                         />
                       );
@@ -598,7 +696,7 @@ export default function Trangdangky({ route }) {
                       return (
                         <Picker.Item
                           key={index.toString()}
-                          label={item.value}
+                          label={item.name}
                           value={item.id}
                         />
                       );
@@ -621,7 +719,7 @@ export default function Trangdangky({ route }) {
                       return (
                         <Picker.Item
                           key={index.toString()}
-                          label={item.value}
+                          label={item.name}
                           value={item.id}
                         />
                       );
@@ -644,7 +742,7 @@ export default function Trangdangky({ route }) {
                       return (
                         <Picker.Item
                           key={index.toString()}
-                          label={item.value}
+                          label={item.name}
                           value={item.id}
                         />
                       );
@@ -684,7 +782,7 @@ export default function Trangdangky({ route }) {
                       return (
                         <Picker.Item
                           key={index.toString()}
-                          label={item.value}
+                          label={item.name}
                           value={item.id}
                         />
                       );
@@ -707,7 +805,7 @@ export default function Trangdangky({ route }) {
                       return (
                         <Picker.Item
                           key={index.toString()}
-                          label={item.value}
+                          label={item.name}
                           value={item.id}
                         />
                       );
@@ -730,7 +828,7 @@ export default function Trangdangky({ route }) {
                       return (
                         <Picker.Item
                           key={index.toString()}
-                          label={item.value}
+                          label={item.name}
                           value={item.id}
                         />
                       );
@@ -754,7 +852,13 @@ export default function Trangdangky({ route }) {
           <View style={styles.block}>
             <View style={styles.title}>
               <Text
-                style={{ fontSize: 20, fontWeight: "bold", color: "#145374" }}
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  color: "#145374",
+                  flexGrow: 1,
+                  textAlign: "center",
+                }}
               >
                 Đăng ký nguyện vọng
               </Text>
@@ -784,7 +888,13 @@ export default function Trangdangky({ route }) {
           <View style={styles.block}>
             <View style={styles.title}>
               <Text
-                style={{ fontSize: 20, fontWeight: "bold", color: "#145374" }}
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  color: "#145374",
+                  flexGrow: 1,
+                  textAlign: "center",
+                }}
               >
                 Chế độ ưu tiên
               </Text>
@@ -805,17 +915,17 @@ export default function Trangdangky({ route }) {
                 <View style={[styles.field, { zIndex: 10003 }]}>
                   <Text>Đối tượng ưu tiên</Text>
                   <Picker
-                    selectedValue={data.IDTinh}
+                    selectedValue={data.DoiTuongUuTien}
                     style={{ height: 50, width: "100%" }}
                     onValueChange={(itemValue, itemIndex) =>
-                      changeValuePicker({ IDTinh: itemValue })
+                      changeValuePicker({ DoiTuongUuTien: itemValue })
                     }
                   >
-                    {picker.IDTinh.map((item, index) => {
+                    {picker.DoiTuongUuTien.map((item, index) => {
                       return (
                         <Picker.Item
                           key={index.toString()}
-                          label={item.value}
+                          label={item.name}
                           value={item.id}
                         />
                       );
@@ -927,6 +1037,7 @@ const styles = StyleSheet.create({
     // marginBottom: "0%",
   },
   title: {
+    width: "60%",
     backgroundColor: "#d6d2c4",
     position: "absolute",
     top: 5,
@@ -934,9 +1045,9 @@ const styles = StyleSheet.create({
     // left: "10%",
     alignSelf: "center",
     alignItems: "center",
-    width: "60%",
-    paddingLeft: 5,
-    paddingRight: 5,
+    flexDirection: "row",
+    paddingLeft: 2,
+    paddingRight: 2,
     paddingBottom: 5,
     zIndex: 1,
   },
