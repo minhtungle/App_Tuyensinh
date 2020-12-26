@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Button,
   Modal,
+  Alert,
 } from "react-native";
 
 import RadioButtonRN from "radio-buttons-react-native";
@@ -49,10 +50,6 @@ export default function Trangdangky({ route }) {
       {
         Id: 1,
         MaTruong: "aaa",
-      },
-      {
-        Id: 2,
-        MaTruong: "bbb",
       },
     ], //Id, MaTruong
     DoiTuongUuTien: [],
@@ -455,18 +452,11 @@ export default function Trangdangky({ route }) {
             }}
           >
             {/*--------- Top ---------*/}
-            <View
-              style={{
-                flexDirection: "row",
-                // height: 40,
-              }}
-            >
-              {/*Top-Left*/}
+            <View>
               <TouchableOpacity onPress={() => {}}>
                 <Text
                   style={{
                     padding: 8,
-                    borderWidth: 1,
                     textAlignVertical: "center",
                     textAlign: "center",
                   }}
@@ -475,32 +465,26 @@ export default function Trangdangky({ route }) {
                   Nguyện vọng 1
                 </Text>
               </TouchableOpacity>
-              {/*Top-Right*/}
-              <TextInput
-                style={{
-                  flexGrow: 1,
-                  borderLeftWidth: 1,
-                  paddingLeft: 10,
-                }}
-                placeholder="Mã trường"
-                onChangeText={(value) => ChangeMaTruong(index, item, value)}
-              >
-                {data.NguyenVong[index].MaTruong}
-              </TextInput>
             </View>
             {/*--------- Bottom -------*/}
             <View style={{ borderTopWidth: 1 }}>
-              <Text
-                style={{
-                  padding: 8,
-                  textAlignVertical: "center",
-                  textAlign: "center",
-                  color: "#9B9B9B",
-                }}
-                numberOfLines={1}
+              <Picker
+                selectedValue={data.DanToc}
+                style={{ height: 40, width: "100%" }}
+                onValueChange={(itemValue, itemIndex) =>
+                  ChangeMaTruong(index, item, itemValue)
+                }
               >
-                Tên trường
-              </Text>
+                {picker.DanToc.map((item, index) => {
+                  return (
+                    <Picker.Item
+                      key={index.toString()}
+                      label={item.name}
+                      value={item.id}
+                    />
+                  );
+                })}
+              </Picker>
             </View>
           </View>
           {/*------------- Right ----------------*/}
@@ -538,18 +522,11 @@ export default function Trangdangky({ route }) {
             }}
           >
             {/*--------- Top ---------*/}
-            <View
-              style={{
-                flexDirection: "row",
-                // height: 40,
-              }}
-            >
-              {/*Top-Left*/}
+            <View>
               <TouchableOpacity onPress={() => {}}>
                 <Text
                   style={{
                     padding: 8,
-                    borderWidth: 1,
                     textAlignVertical: "center",
                     textAlign: "center",
                   }}
@@ -558,32 +535,26 @@ export default function Trangdangky({ route }) {
                   Nguyện vọng {index + 1}
                 </Text>
               </TouchableOpacity>
-              {/*Top-Right*/}
-              <TextInput
-                style={{
-                  flexGrow: 1,
-                  borderLeftWidth: 1,
-                  paddingLeft: 10,
-                }}
-                placeholder="Mã trường"
-                onChangeText={(value) => ChangeMaTruong(index, item, value)}
-              >
-                {data.NguyenVong[index].MaTruong}
-              </TextInput>
             </View>
             {/*--------- Bottom -------*/}
             <View style={{ borderTopWidth: 1 }}>
-              <Text
-                style={{
-                  padding: 8,
-                  textAlignVertical: "center",
-                  textAlign: "center",
-                  color: "#9B9B9B",
-                }}
-                numberOfLines={1}
+              <Picker
+                selectedValue={data.DanToc}
+                style={{ height: 40, width: "100%" }}
+                onValueChange={(itemValue, itemIndex) =>
+                  changeValuePicker({ DanToc: itemValue })
+                }
               >
-                Tên trường
-              </Text>
+                {picker.DanToc.map((item, index) => {
+                  return (
+                    <Picker.Item
+                      key={index.toString()}
+                      label={item.name}
+                      value={item.name}
+                    />
+                  );
+                })}
+              </Picker>
             </View>
           </View>
           {/*------------- Right ----------------*/}
@@ -644,7 +615,7 @@ export default function Trangdangky({ route }) {
   const [modalVisible, setModalVisible] = useState(false);
   //#endregion
 
-  //#region API tỉnh-huyện-xã
+  //#region API - Call:  tỉnh-huyện-xã
   //#region Tỉnh
   //* Tỉnh:
   useEffect(() => {
@@ -917,6 +888,68 @@ export default function Trangdangky({ route }) {
   //#endregion
   //#endregion
 
+  //#region API - Push: Đăng ký
+  //* Đăng ký
+  const DangKy = async () => {
+    try {
+      await fetch("http://192.168.1.13:1998/api/TSAPIService/dangkytuyensinh", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          MaHocSinh: "a",
+          MatKhau: "a",
+          HoTen: "a",
+          NgaySinh: "a",
+          DanToc: "a",
+          GioiTinh: false,
+
+          IDTinhNS: 1,
+          IDHuyenNS: 1,
+          IDXaNS: 1,
+          DiaChiNS: "a",
+
+          IDTinhTT: 1,
+          IDQuanTT: 1,
+          IDXaTT: 1,
+          DiaChiTT: "a",
+
+          IDTinh: 1,
+          IDQuan: 1,
+          IDPhuong: 1,
+          DiaChi: "a",
+          lstNguyenVong: [],
+          lstDoiTuongUuTien: [],
+          CoGiaiThuongQuocGia: false,
+          lstFileDinhKem: [],
+
+          HoTenMe: "a",
+          NamSinhMe: "a",
+          CMNDMe: "a",
+
+          HoTenCha: "a",
+          NamSinhCha: "a",
+          CMNDCha: "a",
+
+          HoTenNguoiGiamHo: "a",
+          NamSinhNguoiGiamHo: "a",
+          CMNDNguoiGiamHo: "a",
+
+          DienThoai: "a",
+          Email: "a",
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => console.log(responseJson));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  //#endregion
+  console.log(data);
   return (
     <ScrollView>
       <KeyboardAvoidingView behavior="padding">
@@ -1575,10 +1608,12 @@ export default function Trangdangky({ route }) {
                       icon="camera"
                       color={Colors.red500}
                       size={25}
+                      DangKy
                       // onPress={() => _pickImg()}
-                      onPress={() => {
-                        navigation.navigate("Images");
-                      }}
+                      onPress={() => DangKy()}
+                      // onPress={() => {
+                      //   navigation.navigate("Images");
+                      // }}
                     />
                     {/*--------Camera--------*/}
                     <View
