@@ -73,16 +73,24 @@ export default function ComboBox() {
     let type = "",
       value1 = "",
       value2 = "";
+
+    let check = false; // Khi có box được check
+    let status = false; // Khi thông tin nhập đầy đủ
+
     for (var i = 0; i < checkboxValue.length; i++) {
       if (checkboxValue[i].checked) {
+        check = true;
         EmptyOrNot(i)
-          ? Alert.alert("Mời nhập đầy đủ thông tin trước khi tra cứu")
+          ? (Alert.alert("Mời nhập đầy đủ thông tin trước khi tra cứu"),
+            (status = false))
           : ((type = checkboxValue[i].type),
             (value1 = checkboxValue[i].value1),
             (value2 = checkboxValue[i].value2),
-            getApi(type, value1, value2));
+            getApi(type, value1, value2),
+            (status = true));
       }
     }
+    return check ? (status ? true : false) : false;
   };
   //* Cập nhật value
   //#region Hàm update với logic cũ
@@ -182,10 +190,11 @@ export default function ComboBox() {
           style={styles.button2}
           color="#61b15a"
           onPress={() => {
-            onSubmit(),
-              navigation.navigate("Ketqua", {
-                data: data,
-              });
+            onSubmit()
+              ? navigation.navigate("Ketqua", {
+                  data: data,
+                })
+              : Alert.alert("Mời bạn chọn loại tra cứu trước");
           }}
           // onPress={() => onSubmit()}
         >

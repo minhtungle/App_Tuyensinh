@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   KeyboardAvoidingView,
   View,
@@ -21,7 +21,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Trangdangky({ route }) {
-  // const { DoiTuongTuyenSinh } = route.params;
+  const { DoiTuongTuyenSinh } = route.params;
   const navigation = useNavigation();
   const [data, setData] = useState({
     MaHocSinh: "",
@@ -76,7 +76,6 @@ export default function Trangdangky({ route }) {
     DienThoaiLienHe: "",
     MailLienHe: "",
   });
-  // console.log(data.NguyenVong);
   //#region DropPicker: Dữ liệu - Thay đổi value khi chọn
   //* Dữ liệu trong dropDown
   const [picker, setPicker] = useState({
@@ -84,6 +83,222 @@ export default function Trangdangky({ route }) {
       {
         id: "0",
         name: "Chọn dân tộc",
+      },
+      {
+        id: "1",
+        name: "Kinh",
+      },
+      {
+        id: "2",
+        name: "Tày",
+      },
+      {
+        id: "3",
+        name: "Thái",
+      },
+      {
+        id: "4",
+        name: "Mường",
+      },
+      {
+        id: "5",
+        name: "Khơ me",
+      },
+      {
+        id: "6",
+        name: "Hoa (Hán)",
+      },
+      {
+        id: "7",
+        name: "Nùng",
+      },
+      {
+        id: "8",
+        name: "H'mông (Mèo)",
+      },
+      {
+        id: "9",
+        name: "Dao",
+      },
+      {
+        id: "10",
+        name: "Gia - rai",
+      },
+      {
+        id: "11",
+        name: "Ê-đê",
+      },
+      {
+        id: "12",
+        name: "Ba-na",
+      },
+      {
+        id: "13",
+        name: "Sán Chay (Cao Lan-Sán Chỉ)",
+      },
+      {
+        id: "14",
+        name: "Chăm (Chàm)",
+      },
+      {
+        id: "15",
+        name: "Cơ-ho",
+      },
+      {
+        id: "16",
+        name: "Xơ-đăng",
+      },
+      {
+        id: "17",
+        name: "Sán Dìu",
+      },
+      {
+        id: "18",
+        name: "Hrê",
+      },
+      {
+        id: "19",
+        name: "Ra-glai",
+      },
+      {
+        id: "20",
+        name: "Mnông",
+      },
+      {
+        id: "21",
+        name: "Thổ (4)",
+      },
+      {
+        id: "22",
+        name: "XTiêng",
+      },
+      {
+        id: "23",
+        name: "Khơ-mú",
+      },
+      {
+        id: "24",
+        name: "Bru-Vân Kiều",
+      },
+      {
+        id: "25",
+        name: "Cơ-Tu",
+      },
+      {
+        id: "26",
+        name: "Giáy",
+      },
+      {
+        id: "27",
+        name: "Tà-ôi",
+      },
+      {
+        id: "28",
+        name: "Mạ",
+      },
+      {
+        id: "29",
+        name: "Gié-Triêng",
+      },
+      {
+        id: "30",
+        name: "Co",
+      },
+      {
+        id: "31",
+        name: "Chơ - ro",
+      },
+      {
+        id: "32",
+        name: "Xinh-mun",
+      },
+      {
+        id: "33",
+        name: "Hà Nhì",
+      },
+      {
+        id: "34",
+        name: "Chu - ru",
+      },
+      {
+        id: "35",
+        name: "Lào",
+      },
+      {
+        id: "36",
+        name: "La Chí",
+      },
+      {
+        id: "37",
+        name: "Kháng",
+      },
+      {
+        id: "38",
+        name: "Phù Lá",
+      },
+      {
+        id: "39",
+        name: "La Hủ",
+      },
+      {
+        id: "40",
+        name: "La Ha",
+      },
+      {
+        id: "41",
+        name: "Pà Thẻn",
+      },
+      {
+        id: "42",
+        name: "Lự",
+      },
+      {
+        id: "43",
+        name: "Ngái",
+      },
+      {
+        id: "44",
+        name: "Chứt",
+      },
+      {
+        id: "45",
+        name: "Lô Lô",
+      },
+      {
+        id: "46",
+        name: "Mảng",
+      },
+      {
+        id: "47",
+        name: "Cơ Lao",
+      },
+      {
+        id: "48",
+        name: "Bố Y",
+      },
+      {
+        id: "49",
+        name: "Cống",
+      },
+      {
+        id: "50",
+        name: "Si La",
+      },
+      {
+        id: "51",
+        name: "Pu Péo",
+      },
+      {
+        id: "52",
+        name: "Rơ - măm",
+      },
+      {
+        id: "53",
+        name: "Brâu",
+      },
+      {
+        id: "54",
+        name: "Ơ Đu",
       },
     ],
     // Nơi sinh
@@ -176,6 +391,13 @@ export default function Trangdangky({ route }) {
   //#endregion
 
   //#region Nguyện Vọng: Thêm - Xóa - Sửa Value - List
+  //* Data nguyện vọng
+  // const [aa, setDaaata] = useState([
+  //   {
+  //     id: "Mã trường",
+  //     name: "Tên",
+  //   },
+  // ]);
   //* Thêm nguyện vọng
   const ThemNV = () => {
     setData((prevState) => ({
@@ -415,9 +637,286 @@ export default function Trangdangky({ route }) {
     showMode("time");
   };
   //#endregion
+
+  //#region Pass: Ẩn hiện
   //* Ẩn hiện pass
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  //#endregion
+
+  //#region API tỉnh-huyện-xã
+  //#region Tỉnh
+  //* Tỉnh:
+  useEffect(() => {
+    fetch(
+      "http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=1&level=1"
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            id: "0",
+            name: "Chọn Tỉnh/Thành phố",
+          },
+        ];
+        responseJson.results.map((item, index) => {
+          const obj = {
+            id: item.ID,
+            name: item.TenDiaChi,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          IDTinhNS: arrData,
+          IDTinhTT: arrData,
+          IDTinh: arrData,
+        }));
+      })
+      .catch((error) => {
+        const arrDataFail = [
+          {
+            id: "0",
+            name: "Chọn Tỉnh/Thành phố",
+          },
+        ];
+        setPicker((prevState) => ({
+          ...prevState,
+          IDTinhNS: arrDataFail,
+          IDTinhTT: arrDataFail,
+          IDTinh: arrDataFail,
+        }));
+      });
+  }, []);
+  //#endregion
+  //#region Huyện
+  //* Huyện NS
+  useEffect(() => {
+    fetch(
+      `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDTinhNS}&level=2`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            id: "0",
+            name: "Chọn Quận/Huyện",
+          },
+        ];
+        responseJson.results.map((item, index) => {
+          const obj = {
+            id: item.ID,
+            name: item.TenDiaChi,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          IDHuyenNS: arrData,
+        }));
+      })
+      .catch((error) => {
+        setPicker((prevState) => ({
+          ...prevState,
+          IDHuyenNS: [
+            {
+              id: "0",
+              name: "Chọn Quận/Huyện",
+            },
+          ],
+        }));
+      });
+  }, [data.IDTinhNS]);
+  //* Huyện TT
+  useEffect(() => {
+    fetch(
+      `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDTinhTT}&level=2`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            id: "0",
+            name: "Chọn Quận/Huyện",
+          },
+        ];
+        responseJson.results.map((item, index) => {
+          const obj = {
+            id: item.ID,
+            name: item.TenDiaChi,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          IDHuyenTT: arrData,
+        }));
+      })
+      .catch((error) => {
+        setPicker((prevState) => ({
+          ...prevState,
+          IDHuyenTT: [
+            {
+              id: "0",
+              name: "Chọn Quận/Huyện",
+            },
+          ],
+        }));
+      });
+  }, [data.IDTinhTT]);
+  //* Huyện
+  useEffect(() => {
+    fetch(
+      `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDTinh}&level=2`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            id: "0",
+            name: "Chọn Quận/Huyện",
+          },
+        ];
+        responseJson.results.map((item, index) => {
+          const obj = {
+            id: item.ID,
+            name: item.TenDiaChi,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          IDHuyen: arrData,
+        }));
+      })
+      .catch((error) => {
+        setPicker((prevState) => ({
+          ...prevState,
+          IDHuyen: [
+            {
+              id: "0",
+              name: "Chọn Quận/Huyện",
+            },
+          ],
+        }));
+      });
+  }, [data.IDTinh]);
+  //#endregion
+  //#region Xã
+  //* Xã NS
+  useEffect(() => {
+    fetch(
+      `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDHuyenNS}&level=3`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            id: "0",
+            name: "Chọn Phường/Xã",
+          },
+        ];
+        responseJson.results.map((item, index) => {
+          const obj = {
+            id: item.ID,
+            name: item.TenDiaChi,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          IDXaNS: arrData,
+        }));
+      })
+      .catch((error) => {
+        setPicker((prevState) => ({
+          ...prevState,
+          IDXaNS: [
+            {
+              id: "0",
+              name: "Chọn Phường/Xã",
+            },
+          ],
+        }));
+      });
+  }, [data.IDHuyenNS]);
+  //* Xã TT
+  useEffect(() => {
+    fetch(
+      `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDHuyenTT}&level=3`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            id: "0",
+            name: "Chọn Phường/Xã",
+          },
+        ];
+        responseJson.results.map((item, index) => {
+          const obj = {
+            id: item.ID,
+            name: item.TenDiaChi,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          IDXaTT: arrData,
+        }));
+      })
+      .catch((error) => {
+        setPicker((prevState) => ({
+          ...prevState,
+          IDXaTT: [
+            {
+              id: "0",
+              name: "Chọn Phường/Xã",
+            },
+          ],
+        }));
+      });
+  }, [data.IDHuyenTT]);
+  //* Xã
+  useEffect(() => {
+    fetch(
+      `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDHuyen}&level=3`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            id: "0",
+            name: "Chọn Phường/Xã",
+          },
+        ];
+        responseJson.results.map((item, index) => {
+          const obj = {
+            id: item.ID,
+            name: item.TenDiaChi,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          IDXa: arrData,
+        }));
+      })
+      .catch((error) => {
+        setPicker((prevState) => ({
+          ...prevState,
+          IDXa: [
+            {
+              id: "0",
+              name: "Chọn Phường/Xã",
+            },
+          ],
+        }));
+      });
+  }, [data.IDHuyen]);
+  //#endregion
+  //#endregion
+
   return (
     <ScrollView>
       <KeyboardAvoidingView behavior="padding">
