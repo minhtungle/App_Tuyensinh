@@ -24,6 +24,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function Trangdangky({ route }) {
   const { DoiTuongTuyenSinh } = route.params;
   const navigation = useNavigation();
+
   const [data, setData] = useState({
     MaHocSinh: "",
     MatKhau: "",
@@ -47,10 +48,7 @@ export default function Trangdangky({ route }) {
     IDXa: "",
     DiaChi: "",
     NguyenVong: [
-      {
-        Id: 1,
-        MaTruong: "aaa",
-      },
+      { id: "", nguyenvong: 1, matruong: "1", idtruong: 1, tentruong: "1" },
     ], //Id, MaTruong
     DoiTuongUuTien: [],
     CoGiaiThuongQuocGia: false,
@@ -73,12 +71,13 @@ export default function Trangdangky({ route }) {
     DienThoaiLienHe: "",
     MailLienHe: "",
   });
+  console.log(data.NguyenVong);
   //#region DropPicker: Dữ liệu - Thay đổi value khi chọn
   //* Dữ liệu trong dropDown
   const [picker, setPicker] = useState({
     DanToc: [
       {
-        id: "0",
+        id: "",
         name: "Chọn dân tộc",
       },
       {
@@ -356,6 +355,14 @@ export default function Trangdangky({ route }) {
       },
     ],
     DoiTuongUuTien: [],
+    listTruong: [
+      {
+        id: "",
+        matruong: "",
+        idtruong: "",
+        tentruong: "",
+      },
+    ],
   });
   //* Chọn giá trị cho Picker
   const changeValuePicker = (arg) => {
@@ -387,7 +394,7 @@ export default function Trangdangky({ route }) {
   imageUri && console.log({ uri: imageUri.slice(0, 100) });
   //#endregion
 
-  //#region Nguyện Vọng: Thêm - Xóa - Sửa Value - List
+  //#region Nguyện Vọng: Thêm - Xóa - Sửa Value - List - Call API
   //* Data nguyện vọng
   // const [aa, setDaaata] = useState([
   //   {
@@ -401,8 +408,11 @@ export default function Trangdangky({ route }) {
       ...prevState,
       NguyenVong: prevState.NguyenVong.concat([
         {
-          Id: Math.random(),
-          MaTruong: "",
+          id: Math.random(),
+          nguyenvong: "",
+          matruong: "1",
+          idtruong: "",
+          tentruong: "1",
         },
       ]),
     }));
@@ -412,7 +422,7 @@ export default function Trangdangky({ route }) {
     setData((prevState) => ({
       ...prevState,
       NguyenVong: prevState.NguyenVong.filter((item) => {
-        return item.Id !== id;
+        return item.id !== id;
       }),
     }));
   };
@@ -472,7 +482,7 @@ export default function Trangdangky({ route }) {
                 selectedValue={data.DanToc}
                 style={{ height: 40, width: "100%" }}
                 onValueChange={(itemValue, itemIndex) =>
-                  ChangeMaTruong(index, item, itemValue)
+                  changeValuePicker({ DanToc: itemValue })
                 }
               >
                 {picker.DanToc.map((item, index) => {
@@ -568,7 +578,7 @@ export default function Trangdangky({ route }) {
               icon="minus"
               color={Colors.red500}
               size={25}
-              onPress={() => XoaNV(item.Id)}
+              onPress={() => XoaNV(item.id)}
             />
           </View>
         </View>
@@ -577,18 +587,9 @@ export default function Trangdangky({ route }) {
   //#endregion
 
   //#region DatePicker
-  const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
-  const handleConfirm = (selectedDate) => {
-    setShow(false);
-    onChange(selectedDate);
-  };
-
-  const handleCancel = () => {
-    setShow(false);
-  };
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || data.NgaySinh;
     setShow(Platform.OS === "ios");
@@ -627,7 +628,7 @@ export default function Trangdangky({ route }) {
       .then((responseJson) => {
         const arrData = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Tỉnh/Thành phố",
           },
         ];
@@ -664,6 +665,23 @@ export default function Trangdangky({ route }) {
   //#region Huyện
   //* Huyện NS
   useEffect(() => {
+    //! Cứ khi ID tỉnh thay đổi thì set id và picker huyện-xã về null
+    changeValuePicker({ IDHuyenNS: "", IDXaNS: "" });
+    setPicker((prevState) => ({
+      ...prevState,
+      IDHuyenNS: [
+        {
+          id: "",
+          name: "Chọn Quận/Huyện",
+        },
+      ],
+      IDXaNS: [
+        {
+          id: "",
+          name: "Chọn phường/xã",
+        },
+      ],
+    }));
     fetch(
       `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDTinhNS}&level=2`
     )
@@ -671,7 +689,7 @@ export default function Trangdangky({ route }) {
       .then((responseJson) => {
         const arrData = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Quận/Huyện",
           },
         ];
@@ -701,6 +719,23 @@ export default function Trangdangky({ route }) {
   }, [data.IDTinhNS]);
   //* Huyện TT
   useEffect(() => {
+    //! Cứ khi ID tỉnh thay đổi thì set id và picker huyện-xã về null
+    changeValuePicker({ IDHuyenTT: "", IDXaTT: "" });
+    setPicker((prevState) => ({
+      ...prevState,
+      IDHuyenTT: [
+        {
+          id: "",
+          name: "Chọn Quận/Huyện",
+        },
+      ],
+      IDXaTT: [
+        {
+          id: "",
+          name: "Chọn phường/xã",
+        },
+      ],
+    }));
     fetch(
       `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDTinhTT}&level=2`
     )
@@ -708,7 +743,7 @@ export default function Trangdangky({ route }) {
       .then((responseJson) => {
         const arrData = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Quận/Huyện",
           },
         ];
@@ -738,6 +773,23 @@ export default function Trangdangky({ route }) {
   }, [data.IDTinhTT]);
   //* Huyện
   useEffect(() => {
+    //! Cứ khi ID tỉnh thay đổi thì set id và picker huyện-xã về null
+    changeValuePicker({ IDHuyen: "", IDXa: "" });
+    setPicker((prevState) => ({
+      ...prevState,
+      IDHuyen: [
+        {
+          id: "",
+          name: "Chọn Quận/Huyện",
+        },
+      ],
+      IDXa: [
+        {
+          id: "",
+          name: "Chọn phường/xã",
+        },
+      ],
+    }));
     fetch(
       `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDTinh}&level=2`
     )
@@ -745,7 +797,7 @@ export default function Trangdangky({ route }) {
       .then((responseJson) => {
         const arrData = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Quận/Huyện",
           },
         ];
@@ -777,6 +829,17 @@ export default function Trangdangky({ route }) {
   //#region Xã
   //* Xã NS
   useEffect(() => {
+    //! Cứ khi ID huyện thay đổi thì set id và picker xã về null
+    changeValuePicker({ IDXaNS: "" });
+    setPicker((prevState) => ({
+      ...prevState,
+      IDXaNS: [
+        {
+          id: "",
+          name: "Chọn phường/xã",
+        },
+      ],
+    }));
     fetch(
       `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDHuyenNS}&level=3`
     )
@@ -784,7 +847,7 @@ export default function Trangdangky({ route }) {
       .then((responseJson) => {
         const arrData = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Phường/Xã",
           },
         ];
@@ -814,6 +877,17 @@ export default function Trangdangky({ route }) {
   }, [data.IDHuyenNS]);
   //* Xã TT
   useEffect(() => {
+    //! Cứ khi ID huyện thay đổi thì set id và picker xã về null
+    changeValuePicker({ IDXaTT: "" });
+    setPicker((prevState) => ({
+      ...prevState,
+      IDXaTT: [
+        {
+          id: "",
+          name: "Chọn phường/xã",
+        },
+      ],
+    }));
     fetch(
       `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDHuyenTT}&level=3`
     )
@@ -821,7 +895,7 @@ export default function Trangdangky({ route }) {
       .then((responseJson) => {
         const arrData = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Phường/Xã",
           },
         ];
@@ -851,6 +925,17 @@ export default function Trangdangky({ route }) {
   }, [data.IDHuyenTT]);
   //* Xã
   useEffect(() => {
+    //! Cứ khi ID huyện thay đổi thì set id và picker xã về null
+    changeValuePicker({ IDXa: "" });
+    setPicker((prevState) => ({
+      ...prevState,
+      IDXa: [
+        {
+          id: "",
+          name: "Chọn phường/xã",
+        },
+      ],
+    }));
     fetch(
       `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDHuyen}&level=3`
     )
@@ -858,7 +943,7 @@ export default function Trangdangky({ route }) {
       .then((responseJson) => {
         const arrData = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Phường/Xã",
           },
         ];
@@ -886,6 +971,25 @@ export default function Trangdangky({ route }) {
         }));
       });
   }, [data.IDHuyen]);
+  //#endregion
+  //#region Trường
+  useEffect(() => {
+    fetch(
+      `http://192.168.1.13:1998/api/TSAPIService/getschools?idTinh_ThuongTru=${data.IDTinhTT}&Cap=${DoiTuongTuyenSinh}`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            id: "",
+            idtruong: "",
+            matruong: "",
+            tentruong: "Chọn trường",
+          },
+        ];
+      })
+      .catch((error) => {});
+  }, [data.IDTinhTT]);
   //#endregion
   //#endregion
 
@@ -1107,7 +1211,7 @@ export default function Trangdangky({ route }) {
                         <Picker.Item
                           key={index.toString()}
                           label={item.name}
-                          value={item.id}
+                          value={item.name}
                         />
                       );
                     })}
@@ -1650,18 +1754,13 @@ export default function Trangdangky({ route }) {
 const styles = StyleSheet.create({
   //? Phân cấp View : container > block = title > box > field(...element)
   container: {
-    // backgroundColor:
     width: "100%",
     height: "100%",
     alignItems: "center",
   },
   block: {
     backgroundColor: "#d6d2c4",
-    // borderColor: "green",
-    // borderWidth: 1,
     width: "100%",
-    // margin: "5%",
-    // marginBottom: "0%",
   },
   title: {
     width: "60%",

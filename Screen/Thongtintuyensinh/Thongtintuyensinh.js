@@ -25,14 +25,6 @@ export default function Thongtintuyensinh() {
   });
   const [modalVisible, setModalVisible] = useState(false);
   //#region DropPicker: Dữ liệu - Thay đổi value khi chọn - Ràng buộc picker child với parent
-  //* Ràng buộc picker child với parent
-  useEffect(() => {
-    data.IDTinh == "" || null
-      ? changeValuePicker({ IDHuyen: "", IDXa: "" })
-      : data.IDHuyen == "" || null
-      ? changeValuePicker({ IDXa: "" })
-      : null;
-  }, [data.IDTinh, data.IDHuyen]);
   //* Dữ liệu trong dropDown
   const [picker, setPicker] = useState({
     IDTinh: [
@@ -145,6 +137,23 @@ export default function Thongtintuyensinh() {
   }, [0]);
   //* Huyện
   useEffect(() => {
+    //! Cứ khi ID tỉnh thay đổi thì set id và picker huyện-xã về null
+    changeValuePicker({ IDHuyen: "", IDXa: "" });
+    setPicker((prevState) => ({
+      ...prevState,
+      IDHuyen: [
+        {
+          id: "",
+          name: "Chọn Quận/Huyện",
+        },
+      ],
+      IDXa: [
+        {
+          id: "",
+          name: "Chọn phường/xã",
+        },
+      ],
+    }));
     fetch(
       `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDTinh}&level=2`
     )
@@ -182,6 +191,17 @@ export default function Thongtintuyensinh() {
   }, [data.IDTinh]);
   //* Xã
   useEffect(() => {
+    //! Cứ khi ID huyện thay đổi thì set id và picker xã về null
+    changeValuePicker({ IDXa: "" });
+    setPicker((prevState) => ({
+      ...prevState,
+      IDXa: [
+        {
+          id: "",
+          name: "Chọn phường/xã",
+        },
+      ],
+    }));
     fetch(
       `http://192.168.1.13:1998/api/TSAPIService/getaddress?idParent=${data.IDHuyen}&level=3`
     )
