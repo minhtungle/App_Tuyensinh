@@ -48,7 +48,13 @@ export default function Trangdangky({ route }) {
     IDXa: "",
     DiaChi: "",
     NguyenVong: [
-      { id: "", nguyenvong: 1, matruong: "1", idtruong: 1, tentruong: "1" },
+      {
+        id: "",
+        nguyenvong: 1,
+        matruong: "",
+        idtruong: "",
+        tentruong: "Chọn trường",
+      },
     ], //Id, MaTruong
     DoiTuongUuTien: [],
     CoGiaiThuongQuocGia: false,
@@ -72,6 +78,7 @@ export default function Trangdangky({ route }) {
     MailLienHe: "",
   });
   console.log(data.NguyenVong);
+  console.log(data.IDTinhTT);
   //#region DropPicker: Dữ liệu - Thay đổi value khi chọn
   //* Dữ liệu trong dropDown
   const [picker, setPicker] = useState({
@@ -409,7 +416,7 @@ export default function Trangdangky({ route }) {
       NguyenVong: prevState.NguyenVong.concat([
         {
           id: Math.random(),
-          nguyenvong: "",
+          nguyenvong: prevState.NguyenVong.length + 1,
           matruong: "1",
           idtruong: "",
           tentruong: "1",
@@ -479,18 +486,23 @@ export default function Trangdangky({ route }) {
             {/*--------- Bottom -------*/}
             <View style={{ borderTopWidth: 1 }}>
               <Picker
-                selectedValue={data.DanToc}
+                selectedValue={data.NguyenVong[index].tentruong}
                 style={{ height: 40, width: "100%" }}
                 onValueChange={(itemValue, itemIndex) =>
                   changeValuePicker({ DanToc: itemValue })
                 }
               >
-                {picker.DanToc.map((item, index) => {
+                {picker.listTruong.map((item, index) => {
                   return (
                     <Picker.Item
                       key={index.toString()}
-                      label={item.name}
-                      value={item.id}
+                      label={item.matruong + item.tentruong}
+                      value={{
+                        nguyenvong: "",
+                        matruong: "1",
+                        idtruong: "",
+                        tentruong: "1",
+                      }}
                     />
                   );
                 })}
@@ -987,8 +999,21 @@ export default function Trangdangky({ route }) {
             tentruong: "Chọn trường",
           },
         ];
+        responseJson.results.map((item, index) => {
+          const obj = {
+            id: index + 1,
+            idtruong: item.IDTruong,
+            matruong: item.MaTruong,
+            tentruong: item.TenTruong,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          listTruong: arrData,
+        }));
       })
-      .catch((error) => {});
+      .catch((error) => error);
   }, [data.IDTinhTT]);
   //#endregion
   //#endregion
