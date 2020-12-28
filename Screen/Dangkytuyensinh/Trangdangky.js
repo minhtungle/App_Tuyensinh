@@ -612,6 +612,7 @@ export default function Trangdangky({ route }) {
   //#region Pass: Ẩn hiện
   //* Ẩn hiện pass
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  //* Ẩn hiện modal
   const [modalVisible, setModalVisible] = useState(false);
   //#endregion
 

@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Alert, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  Text,
+  Linking,
+} from "react-native";
 
 import { IconButton, Colors } from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
@@ -12,9 +21,9 @@ export default function Thongtintuyensinh() {
     IDXa: "",
     CapTS: "",
     NamTS: "",
-    data: [],
+    ketqua: [],
   });
-
+  const [modalVisible, setModalVisible] = useState(false);
   //#region DropPicker: Dữ liệu - Thay đổi value khi chọn - Ràng buộc picker child với parent
   //* Ràng buộc picker child với parent
   useEffect(() => {
@@ -244,9 +253,9 @@ export default function Thongtintuyensinh() {
               rs.push(obj);
               obj = {};
             }
-            changeValuePicker({ data: rs });
+            changeValuePicker({ ketqua: rs });
           } else {
-            changeValuePicker({ data: [] });
+            changeValuePicker({ ketqua: [] });
           }
         });
     } catch (e) {
@@ -254,7 +263,24 @@ export default function Thongtintuyensinh() {
     }
   };
   //#endregion
-
+  const ExternalLinkBtn = (props) => {
+    return (
+      <Button
+        round
+        size="large"
+        color="#61b15a"
+        title={props.title}
+        onPress={() => {
+          Linking.openURL(props.url).catch((err) => {
+            console.error("Không thể kết nối trang web bởi: ", err);
+            alert("Không tải được tệp");
+          });
+        }}
+      >
+        {props.title}
+      </Button>
+    );
+  };
   return (
     <View style={styles.container}>
       <View style={styles.block}>
@@ -430,10 +456,81 @@ export default function Thongtintuyensinh() {
             round
             style={styles.button}
             color="#61b15a"
-            onPress={() => Tracuu()}
+            onPress={() => setModalVisible(true)}
           >
             Tra cứu
           </Button>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 22,
+              }}
+            >
+              <View
+                style={{
+                  margin: 20,
+                  backgroundColor: "white",
+                  borderRadius: 20,
+                  padding: 35,
+                  alignItems: "center",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                  elevation: 5,
+                }}
+              >
+                {data.ketqua.length !== 0 ? (
+                  <View>
+                    <ExternalLinkBtn
+                      title={data.ketqua[0].tieuDe}
+                      url={data.ketqua[0].fileDinhkem}
+                    />
+                  </View>
+                ) : (
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      paddingHorizontal: 10,
+                    }}
+                  >
+                    <TouchableOpacity>
+                      <View
+                        style={{
+                          alignItems: "center",
+                          backgroundColor: "#DDDDDD",
+                          padding: 10,
+                        }}
+                      >
+                        <Text>Kết quả tìm kiếm không tồn tại</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                <Button
+                  round
+                  style={styles.button}
+                  color="#61b15a"
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                >
+                  Đóng
+                </Button>
+              </View>
+            </View>
+          </Modal>
         </View>
       ) : null}
     </View>
