@@ -1,19 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  KeyboardAvoidingView,
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  Button,
-  Modal,
-  Alert,
-} from "react-native";
+import { View, StyleSheet, Alert, ScrollView } from "react-native";
 
+import { IconButton, Colors } from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
+import { Button } from "galio-framework";
 
 export default function Thongtintuyensinh() {
   const [data, setData] = useState({
@@ -22,31 +12,41 @@ export default function Thongtintuyensinh() {
     IDXa: "",
     CapTS: "",
     NamTS: "",
+    data: [],
   });
-  //#region DropPicker: Dữ liệu - Thay đổi value khi chọn
+
+  //#region DropPicker: Dữ liệu - Thay đổi value khi chọn - Ràng buộc picker child với parent
+  //* Ràng buộc picker child với parent
+  useEffect(() => {
+    data.IDTinh == "" || null
+      ? changeValuePicker({ IDHuyen: "", IDXa: "" })
+      : data.IDHuyen == "" || null
+      ? changeValuePicker({ IDXa: "" })
+      : null;
+  }, [data.IDTinh, data.IDHuyen]);
   //* Dữ liệu trong dropDown
   const [picker, setPicker] = useState({
     IDTinh: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Tỉnh/Thành phố",
       },
     ],
     IDHuyen: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Quận/Huyện",
       },
     ],
     IDXa: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Phường/Xã",
       },
     ],
     CapTS: [
       {
-        id: "0",
+        id: "",
         name: "Chọn cấp tuyển sinh",
       },
       {
@@ -64,23 +64,23 @@ export default function Thongtintuyensinh() {
     ],
     NamTS: [
       {
-        id: "0",
+        id: "",
         name: "Chọn năm tuyển sinh",
       },
       {
-        id: "1",
+        id: "2018",
         name: "2018",
       },
       {
-        id: "2",
+        id: "2019",
         name: "2019",
       },
       {
-        id: "3",
+        id: "2020",
         name: "2020",
       },
       {
-        id: "4",
+        id: "2021",
         name: "2021",
       },
     ],
@@ -103,7 +103,7 @@ export default function Thongtintuyensinh() {
       .then((responseJson) => {
         const arrData = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Tỉnh/Thành phố",
           },
         ];
@@ -124,7 +124,7 @@ export default function Thongtintuyensinh() {
       .catch((error) => {
         const arrDataFail = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Tỉnh/Thành phố",
           },
         ];
@@ -133,7 +133,7 @@ export default function Thongtintuyensinh() {
           IDTinh: arrDataFail,
         }));
       });
-  }, []);
+  }, [0]);
   //* Huyện
   useEffect(() => {
     fetch(
@@ -143,7 +143,7 @@ export default function Thongtintuyensinh() {
       .then((responseJson) => {
         const arrData = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Quận/Huyện",
           },
         ];
@@ -164,7 +164,7 @@ export default function Thongtintuyensinh() {
           ...prevState,
           IDHuyen: [
             {
-              id: "0",
+              id: "",
               name: "Chọn Quận/Huyện",
             },
           ],
@@ -180,7 +180,7 @@ export default function Thongtintuyensinh() {
       .then((responseJson) => {
         const arrData = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Phường/Xã",
           },
         ];
@@ -201,7 +201,7 @@ export default function Thongtintuyensinh() {
           ...prevState,
           IDXa: [
             {
-              id: "0",
+              id: "",
               name: "Chọn Phường/Xã",
             },
           ],
@@ -209,163 +209,255 @@ export default function Thongtintuyensinh() {
       });
   }, [data.IDHuyen]);
   //#endregion
+  //#region Button: Ẩn hiện - Tra cứu - Lấy API Tra cứu
+  const Trangthai = () => {
+    if (
+      (data.IDTinh && data.IDHuyen && data.IDXa && data.CapTS && data.NamTS) !=
+      ""
+    ) {
+      return true;
+    }
+    return false;
+  };
+  const Tracuu = async () => {
+    try {
+      await fetch(
+        `http://192.168.1.13:1998/api/TSAPIService/getkehoachbyyear?namhoc=${data.NamTS}&caphoc=${data.CapTS}&idquanhuyen=${data.IDHuyen}&idxaphuong=${data.IDXa}`
+      )
+        .then((response) => response.json())
+        .then((responseJson) => {
+          let obj = {
+            id: "",
+            idTruong: "",
+            tenFile: "",
+            tieuDe: "",
+            fileDinhkem: "",
+          };
+          let rs = [];
+          if (responseJson.Message != "The request is invalid.") {
+            for (let i = 0; i < responseJson.results.length; i++) {
+              obj.id = responseJson.results[i].ID;
+              obj.idTruong = responseJson.results[i].IDTruong;
+              obj.tenFile = responseJson.results[i].TenFile;
+              obj.tieuDe = responseJson.results[i].TieuDe;
+              obj.fileDinhkem = responseJson.results[i].FileDinhKem;
+              rs.push(obj);
+              obj = {};
+            }
+            changeValuePicker({ data: rs });
+          } else {
+            changeValuePicker({ data: [] });
+          }
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  //#endregion
 
   return (
-    <View>
-      {/*// Tỉnh thành phố */}
-      <View style={[styles.field, { zIndex: 11003 }]}>
-        <Text>
-          Chọn tỉnh/thành phố <Text style={{ color: "red" }}>*</Text>
-        </Text>
-        <Picker
-          selectedValue={data.IDTinh}
-          style={{ height: 50, width: "100%" }}
-          onValueChange={(itemValue, itemIndex) =>
-            changeValuePicker({ IDTinh: itemValue })
-          }
-        >
-          {picker.IDTinh.map((item, index) => {
-            return (
-              <Picker.Item
-                key={index.toString()}
-                label={item.name}
-                value={item.id}
+    <View style={styles.container}>
+      <View style={styles.block}>
+        {/*// Tỉnh thành phố */}
+        <View style={[styles.field, { zIndex: 11003 }]}>
+          {data.IDTinh == "" || null ? null : (
+            <View style={styles.label}>
+              <IconButton
+                style={{ backgroundColor: "#61b15a" }}
+                icon="check"
+                color="#FFFF"
+                size={10}
               />
-            );
-          })}
-        </Picker>
-      </View>
-      {/*// Quận huyện */}
-      <View style={[styles.field, { zIndex: 11002 }]}>
-        <Text>
-          Chọn quận/huyện <Text style={{ color: "red" }}>*</Text>
-        </Text>
-        <Picker
-          selectedValue={data.IDHuyen}
-          style={{ height: 50, width: "100%" }}
-          onValueChange={(itemValue, itemIndex) =>
-            changeValuePicker({ IDHuyen: itemValue })
-          }
-        >
-          {picker.IDHuyen.map((item, index) => {
-            return (
-              <Picker.Item
-                key={index.toString()}
-                label={item.name}
-                value={item.id}
+            </View>
+          )}
+          <Picker
+            selectedValue={data.IDTinh}
+            style={styles.picker}
+            onValueChange={(itemValue, itemIndex) =>
+              changeValuePicker({ IDTinh: itemValue })
+            }
+            dropdownIconColor={
+              data.IDTinh == "" || null ? Colors.red500 : "#61b15a"
+            }
+          >
+            {picker.IDTinh.map((item, index) => {
+              return (
+                <Picker.Item
+                  key={index.toString()}
+                  label={item.name}
+                  value={item.id}
+                />
+              );
+            })}
+          </Picker>
+        </View>
+        {/*// Quận huyện */}
+        <View style={[styles.field, { zIndex: 11002 }]}>
+          {data.IDHuyen == "" || null ? null : (
+            <View style={styles.label}>
+              <IconButton
+                style={{ backgroundColor: "#61b15a" }}
+                icon="check"
+                color="#FFFF"
+                size={10}
               />
-            );
-          })}
-        </Picker>
-      </View>
-      {/*// Phường xã */}
-      <View style={[styles.field, { zIndex: 11001 }]}>
-        <Text>
-          Chọn phường/xã <Text style={{ color: "red" }}>*</Text>
-        </Text>
-        <Picker
-          selectedValue={data.IDXa}
-          style={{ height: 50, width: "100%" }}
-          onValueChange={(itemValue, itemIndex) =>
-            changeValuePicker({ IDXa: itemValue })
-          }
-        >
-          {picker.IDXa.map((item, index) => {
-            return (
-              <Picker.Item
-                key={index.toString()}
-                label={item.name}
-                value={item.id}
+            </View>
+          )}
+          <Picker
+            selectedValue={data.IDHuyen}
+            style={styles.picker}
+            onValueChange={(itemValue, itemIndex) =>
+              changeValuePicker({ IDHuyen: itemValue })
+            }
+            dropdownIconColor={
+              data.IDHuyen == "" || null ? Colors.red500 : "#61b15a"
+            }
+          >
+            {picker.IDHuyen.map((item, index) => {
+              return (
+                <Picker.Item
+                  key={index.toString()}
+                  label={item.name}
+                  value={item.id}
+                />
+              );
+            })}
+          </Picker>
+        </View>
+        {/*// Phường xã */}
+        <View style={[styles.field, { zIndex: 11001 }]}>
+          {data.IDXa == "" || null ? null : (
+            <View style={styles.label}>
+              <IconButton
+                style={{ backgroundColor: "#61b15a" }}
+                icon="check"
+                color="#FFFF"
+                size={10}
               />
-            );
-          })}
-        </Picker>
-      </View>
-      {/*// Cấp tuyển sinh */}
-      <View style={[styles.field, { zIndex: 11001 }]}>
-        <Text>
-          Chọn cấp tuyển sinh <Text style={{ color: "red" }}>*</Text>
-        </Text>
-        <Picker
-          selectedValue={data.CapTS}
-          style={{ height: 50, width: "100%" }}
-          onValueChange={(itemValue, itemIndex) =>
-            changeValuePicker({ CapTS: itemValue })
-          }
-        >
-          {picker.CapTS.map((item, index) => {
-            return (
-              <Picker.Item
-                key={index.toString()}
-                label={item.name}
-                value={item.id}
+            </View>
+          )}
+          <Picker
+            selectedValue={data.IDXa}
+            style={styles.picker}
+            onValueChange={(itemValue, itemIndex) =>
+              changeValuePicker({ IDXa: itemValue })
+            }
+            dropdownIconColor={
+              data.IDXa == "" || null ? Colors.red500 : "#61b15a"
+            }
+          >
+            {picker.IDXa.map((item, index) => {
+              return (
+                <Picker.Item
+                  key={index.toString()}
+                  label={item.name}
+                  value={item.id}
+                />
+              );
+            })}
+          </Picker>
+        </View>
+        {/*// Cấp tuyển sinh */}
+        <View style={[styles.field, { zIndex: 11001 }]}>
+          {data.CapTS == "" || null ? null : (
+            <View style={styles.label}>
+              <IconButton
+                style={{ backgroundColor: "#61b15a" }}
+                icon="check"
+                color="#FFFF"
+                size={10}
               />
-            );
-          })}
-        </Picker>
-      </View>
-      {/*// Năm tuyển sinh */}
-      <View style={[styles.field, { zIndex: 11001 }]}>
-        <Text>
-          Chọn năm tuyển sinh <Text style={{ color: "red" }}>*</Text>
-        </Text>
-        <Picker
-          selectedValue={data.NamTS}
-          style={{ height: 50, width: "100%" }}
-          onValueChange={(itemValue, itemIndex) =>
-            changeValuePicker({ NamTS: itemValue })
-          }
-        >
-          {picker.NamTS.map((item, index) => {
-            return (
-              <Picker.Item
-                key={index.toString()}
-                label={item.name}
-                value={item.id}
+            </View>
+          )}
+          <Picker
+            selectedValue={data.CapTS}
+            style={styles.picker}
+            onValueChange={(itemValue, itemIndex) =>
+              changeValuePicker({ CapTS: itemValue })
+            }
+            dropdownIconColor={
+              data.CapTS == "" || null ? Colors.red500 : "#61b15a"
+            }
+          >
+            {picker.CapTS.map((item, index) => {
+              return (
+                <Picker.Item
+                  key={index.toString()}
+                  label={item.name}
+                  value={item.id}
+                />
+              );
+            })}
+          </Picker>
+        </View>
+        {/*// Năm tuyển sinh */}
+        <View style={[styles.field, { zIndex: 11001 }]}>
+          {data.NamTS == "" ? null : (
+            <View style={styles.label}>
+              <IconButton
+                style={{ backgroundColor: "#61b15a" }}
+                icon="check"
+                color="#FFFF"
+                size={10}
               />
-            );
-          })}
-        </Picker>
+            </View>
+          )}
+          <Picker
+            selectedValue={data.NamTS}
+            style={styles.picker}
+            onValueChange={(itemValue, itemIndex) =>
+              changeValuePicker({ NamTS: itemValue })
+            }
+            dropdownIconColor={
+              data.NamTS == "" || null ? Colors.red500 : "#61b15a"
+            }
+          >
+            {picker.NamTS.map((item, index) => {
+              return (
+                <Picker.Item
+                  key={index.toString()}
+                  label={item.name}
+                  value={item.id}
+                />
+              );
+            })}
+          </Picker>
+        </View>
       </View>
+      {Trangthai() ? (
+        <View style-={{}}>
+          <Button
+            round
+            style={styles.button}
+            color="#61b15a"
+            onPress={() => Tracuu()}
+          >
+            Tra cứu
+          </Button>
+        </View>
+      ) : null}
     </View>
   );
 }
 const styles = StyleSheet.create({
   //? Phân cấp View : container > block = title > box > field(...element)
   container: {
-    // backgroundColor:
+    backgroundColor: "white",
     width: "100%",
     height: "100%",
     alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   block: {
-    backgroundColor: "#d6d2c4",
-    // borderColor: "green",
-    // borderWidth: 1,
-    width: "100%",
-    // margin: "5%",
-    // marginBottom: "0%",
-  },
-  title: {
-    width: "60%",
-    backgroundColor: "#d6d2c4",
-    position: "absolute",
-    top: 5,
-    borderRadius: 15,
-    // left: "10%",
-    alignSelf: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    paddingLeft: 2,
-    paddingRight: 2,
-    paddingBottom: 5,
-    zIndex: 1,
+    width: "95%",
+    marginBottom: 10,
   },
   box: {
-    // borderColor: "red",
-    // borderWidth: 1,
     borderRightWidth: 0,
     borderBottomWidth: 0,
+    // borderColor: "red",
+    // borderWidth: 1,
   },
   field: {
     borderColor: "white",
@@ -373,28 +465,38 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
     borderBottomWidth: 0,
     padding: 5,
-    marginBottom: "1%",
+    marginBottom: "2%",
+    flexDirection: "row",
+
+    borderRadius: 16,
+    backgroundColor: "white",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 10,
   },
-  textInput: {
-    fontSize: 18,
-    borderLeftWidth: 0.5,
-    borderBottomWidth: 0.5,
-    paddingLeft: 5,
+  label: {
+    alignSelf: "center",
+    // marginRight: 10,
   },
-  //? Dropdown
-  dropDownStyle: {
-    backgroundColor: "#e8e8e8",
-    borderColor: "#222831",
-    borderWidth: 1,
+  picker: {
+    height: 50,
+    flexGrow: 1,
   },
-  labelStyle: {
-    fontSize: 16,
-    textAlign: "left",
-    color: "#000",
+  button: {
+    alignSelf: "center",
+    borderRadius: 25,
+    textShadowColor: "black",
+    backgroundColor: "#61b15a",
+    shadowColor: "rgba(0, 0, 0, 0.1)",
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: { width: 1, height: 13 },
   },
-  //? Đăng ký nguyện vọng
-  dangkynguyenvong: {},
-  boxTop: {},
-  boxBottom: {},
-  crudIcon: {},
 });

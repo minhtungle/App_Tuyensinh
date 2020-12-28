@@ -301,57 +301,57 @@ export default function Trangdangky({ route }) {
     // Nơi sinh
     IDTinhNS: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Tỉnh/Thành phố",
       },
     ],
     IDHuyenNS: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Quận/Huyện",
       },
     ],
     IDXaNS: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Phường/Xã",
       },
     ],
     // Thường trú
     IDTinhTT: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Tỉnh/Thành phố",
       },
     ],
     IDHuyenTT: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Quận/Huyện",
       },
     ],
     IDXaTT: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Phường/Xã",
       },
     ],
     // Nơi ở
     IDTinh: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Tỉnh/Thành phố",
       },
     ],
     IDHuyen: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Quận/Huyện",
       },
     ],
     IDXa: [
       {
-        id: "0",
+        id: "",
         name: "Chọn Phường/Xã",
       },
     ],
@@ -647,7 +647,7 @@ export default function Trangdangky({ route }) {
       .catch((error) => {
         const arrDataFail = [
           {
-            id: "0",
+            id: "",
             name: "Chọn Tỉnh/Thành phố",
           },
         ];
@@ -658,7 +658,7 @@ export default function Trangdangky({ route }) {
           IDTinh: arrDataFail,
         }));
       });
-  }, []);
+  }, [0]);
   //#endregion
   //#region Huyện
   //* Huyện NS
@@ -691,7 +691,7 @@ export default function Trangdangky({ route }) {
           ...prevState,
           IDHuyenNS: [
             {
-              id: "0",
+              id: "",
               name: "Chọn Quận/Huyện",
             },
           ],
@@ -728,7 +728,7 @@ export default function Trangdangky({ route }) {
           ...prevState,
           IDHuyenTT: [
             {
-              id: "0",
+              id: "",
               name: "Chọn Quận/Huyện",
             },
           ],
@@ -765,7 +765,7 @@ export default function Trangdangky({ route }) {
           ...prevState,
           IDHuyen: [
             {
-              id: "0",
+              id: "",
               name: "Chọn Quận/Huyện",
             },
           ],
@@ -804,7 +804,7 @@ export default function Trangdangky({ route }) {
           ...prevState,
           IDXaNS: [
             {
-              id: "0",
+              id: "",
               name: "Chọn Phường/Xã",
             },
           ],
@@ -841,7 +841,7 @@ export default function Trangdangky({ route }) {
           ...prevState,
           IDXaTT: [
             {
-              id: "0",
+              id: "",
               name: "Chọn Phường/Xã",
             },
           ],
@@ -878,7 +878,7 @@ export default function Trangdangky({ route }) {
           ...prevState,
           IDXa: [
             {
-              id: "0",
+              id: "",
               name: "Chọn Phường/Xã",
             },
           ],
@@ -949,7 +949,6 @@ export default function Trangdangky({ route }) {
     }
   };
   //#endregion
-  console.log(data);
   return (
     <ScrollView>
       <KeyboardAvoidingView behavior="padding">
@@ -1608,7 +1607,6 @@ export default function Trangdangky({ route }) {
                       icon="camera"
                       color={Colors.red500}
                       size={25}
-                      DangKy
                       // onPress={() => _pickImg()}
                       onPress={() => DangKy()}
                       // onPress={() => {
