@@ -49,11 +49,9 @@ export default function Trangdangky({ route }) {
     DiaChi: "",
     NguyenVong: [
       {
-        id: "",
-        nguyenvong: 1,
-        matruong: "",
-        idtruong: "",
-        tentruong: "Chọn trường",
+        ID: "",
+        MaTruong: "",
+        TenTruong: "",
       },
     ], //Id, MaTruong
     DoiTuongUuTien: [],
@@ -358,14 +356,7 @@ export default function Trangdangky({ route }) {
       },
     ],
     DoiTuongUuTien: [],
-    listTruong: [
-      {
-        id: "",
-        matruong: "",
-        idtruong: "",
-        tentruong: "",
-      },
-    ],
+    NguyenVong: [],
   });
   const [DSdoituonguutien, setDSdoituonguutien] = useState([]);
   //* Chọn giá trị cho Picker
@@ -412,41 +403,41 @@ export default function Trangdangky({ route }) {
       ...prevState,
       NguyenVong: prevState.NguyenVong.concat([
         {
-          id: Math.random(),
-          nguyenvong: prevState.NguyenVong.length + 1,
-          matruong: "1",
-          idtruong: "",
-          tentruong: "1",
+          ID: "",
+          MaTruong: "",
+          TenTruong: "",
         },
       ]),
     }));
   };
   //* Xóa nguyện vọng
-  const XoaNV = (id) => {
+  const XoaNV = (indexParent) => {
     setData((prevState) => ({
       ...prevState,
-      NguyenVong: prevState.NguyenVong.filter((item) => {
-        return item.id !== id;
+      NguyenVong: prevState.NguyenVong.filter((item, index) => {
+        return index !== indexParent;
       }),
     }));
   };
   //* Thay đổi mã trường
-  const ChangeMaTruong = (i, nguyenvong, text) => {
+  const ChangeMaTruong = (indexParent, itemParent, itemValue) => {
     let obj = {
-      ...nguyenvong,
-      MaTruong: text,
+      ...itemParent,
+      ID: itemValue.ID,
+      MaTruong: itemValue.MaTruong,
+      TenTruong: itemValue.TenTruong,
     };
     setData((prevState) => ({
       ...prevState,
       NguyenVong: prevState.NguyenVong.map((item, index) =>
-        i === index ? obj : item
+        indexParent === index ? obj : item
       ),
     }));
   };
   //* List nguyện vọng
   const ListNV = () =>
-    data.NguyenVong.map((item, index) => {
-      return index === 0 ? (
+    data.NguyenVong.map((itemParent, indexParent) => {
+      return indexParent === 0 ? (
         //* Nguyện vọng mặc định
         <View
           style={{
@@ -455,7 +446,7 @@ export default function Trangdangky({ route }) {
             marginBottom: 15,
             flexDirection: "row",
           }}
-          key={index.toString()}
+          key={indexParent.toString()}
         >
           {/*------------- Left ----------------*/}
           <View
@@ -467,38 +458,35 @@ export default function Trangdangky({ route }) {
           >
             {/*--------- Top ---------*/}
             <View>
-              <TouchableOpacity onPress={() => {}}>
-                <Text
-                  style={{
-                    padding: 8,
-                    textAlignVertical: "center",
-                    textAlign: "center",
-                  }}
-                  numberOfLines={1}
-                >
-                  Nguyện vọng 1
-                </Text>
-              </TouchableOpacity>
+              <Text
+                style={{
+                  padding: 8,
+                  textAlignVertical: "center",
+                  textAlign: "center",
+                }}
+                numberOfLines={1}
+              >
+                Nguyện vọng {indexParent + 1}
+              </Text>
             </View>
             {/*--------- Bottom -------*/}
             <View style={{ borderTopWidth: 1 }}>
               <Picker
-                selectedValue={data.NguyenVong[index].tentruong}
+                selectedValue={data.NguyenVong[indexParent]}
                 style={{ height: 40, width: "100%" }}
                 onValueChange={(itemValue, itemIndex) =>
-                  changeValuePicker({ DanToc: itemValue })
+                  ChangeMaTruong(indexParent, itemParent, itemValue)
                 }
               >
-                {picker.listTruong.map((item, index) => {
+                {picker.NguyenVong.map((itemChild, indexChild) => {
                   return (
                     <Picker.Item
-                      key={index.toString()}
-                      label={item.matruong + item.tentruong}
+                      key={indexChild.toString()}
+                      label={itemChild.MaTruong + ": " + itemChild.TenTruong}
                       value={{
-                        nguyenvong: "",
-                        matruong: "1",
-                        idtruong: "",
-                        tentruong: "1",
+                        ID: itemChild.ID,
+                        MaTruong: itemChild.MaTruong,
+                        TenTruong: itemChild.TenTruong,
                       }}
                     />
                   );
@@ -530,7 +518,7 @@ export default function Trangdangky({ route }) {
             marginBottom: "2%",
             flexDirection: "row",
           }}
-          key={index.toString()}
+          key={indexParent.toString()}
         >
           {/*------------- Left ----------------*/}
           <View
@@ -551,25 +539,29 @@ export default function Trangdangky({ route }) {
                   }}
                   numberOfLines={1}
                 >
-                  Nguyện vọng {index + 1}
+                  Nguyện vọng {indexParent + 1}
                 </Text>
               </TouchableOpacity>
             </View>
             {/*--------- Bottom -------*/}
             <View style={{ borderTopWidth: 1 }}>
               <Picker
-                selectedValue={data.DanToc}
+                selectedValue={data.NguyenVong[indexParent]}
                 style={{ height: 40, width: "100%" }}
                 onValueChange={(itemValue, itemIndex) =>
-                  changeValuePicker({ DanToc: itemValue })
+                  ChangeMaTruong(indexParent, itemParent, itemValue)
                 }
               >
-                {picker.DanToc.map((item, index) => {
+                {picker.NguyenVong.map((itemChild, indexChild) => {
                   return (
                     <Picker.Item
-                      key={index.toString()}
-                      label={item.name}
-                      value={item.name}
+                      key={indexChild.toString()}
+                      label={itemChild.MaTruong + ": " + itemChild.TenTruong}
+                      value={{
+                        ID: itemChild.ID,
+                        MaTruong: itemChild.MaTruong,
+                        TenTruong: itemChild.TenTruong,
+                      }}
                     />
                   );
                 })}
@@ -587,7 +579,7 @@ export default function Trangdangky({ route }) {
               icon="minus"
               color={Colors.red500}
               size={25}
-              onPress={() => XoaNV(item.id)}
+              onPress={() => XoaNV(indexParent)}
             />
           </View>
         </View>
@@ -1038,8 +1030,69 @@ export default function Trangdangky({ route }) {
       .catch((error) => setDSdoituonguutien([]));
   }, [0]);
   //#endregion
+  //#region Nguyện vọng
+  useEffect(() => {
+    fetch(
+      `http://192.168.1.13:1998/api/TSAPIService/getschools?idTinh_ThuongTru=${data.IDTinhTT}&Cap=${DoiTuongTuyenSinh}`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            ID: 0,
+            MaTruong: "Chọn trường",
+            TenTruong: "...",
+          },
+        ];
+        responseJson.results.map((item, index) => {
+          const obj = {
+            ID: item.ID,
+            MaTruong: item.MaTruong,
+            TenTruong: item.TenTruong,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          NguyenVong: arrData,
+        }));
+      })
+      .catch((error) => {
+        setPicker((prevState) => ({
+          ...prevState,
+          NguyenVong: [],
+        }));
+      });
+  }, [data.IDTinhTT]);
   //#endregion
-  const Them_DoiTuongUuTien = (indexParent, indexChild) => {
+  //#endregion
+
+  //#region Chọn loại ưu tiên
+  //* Hàm xử lí thay đổi kiểu check (true/false)
+  const Check = (indexParent, indexChild, value) => {
+    const arr = DSdoituonguutien.map(
+      (item_DSdoituonguutien, index_DSdoituonguutien) => {
+        index_DSdoituonguutien == indexParent
+          ? {
+              ...item_DSdoituonguutien,
+              lstDanhSach: item_DSdoituonguutien.lstDanhSach.map(
+                (lstDanhSach_item, lstDanhSach_index) => {
+                  lstDanhSach_index == indexChild
+                    ? ({
+                        ...lstDanhSach_item,
+                        check: value,
+                      },
+                      console.log(lstDanhSach_item.check))
+                    : lstDanhSach_item;
+                }
+              ),
+            }
+          : item_DSdoituonguutien;
+      }
+    );
+  };
+  //* Thêm loại ưu tiên
+  const Them_DoiTuongUuTien = (indexParent, indexChild, value) => {
     setData((prevState) => ({
       ...prevState,
       DoiTuongUuTien: prevState.DoiTuongUuTien.concat({
@@ -1047,12 +1100,13 @@ export default function Trangdangky({ route }) {
         ma: DSdoituonguutien[indexParent].lstDanhSach[indexChild].Ma,
       }),
     }));
-    const arr = DSdoituonguutien.map(
-      (item_DSdoituonguutien, index_DSdoituonguutien) => {}
-    );
-    console.log(data.DoiTuongUuTien);
+    // Chuyển kiểu check
+    Check(indexParent, indexChild, value);
+    console.log(arr);
+    // setDSdoituonguutien(arr);
   };
-  const Xoa_DoiTuongUuTien = (indexParent, indexChild) => {
+  //* Xóa loại ưu tiên
+  const Xoa_DoiTuongUuTien = (indexParent, indexChild, value) => {
     setData((prevState) => ({
       ...prevState,
       DoiTuongUuTien: prevState.DoiTuongUuTien.filter((item) => {
@@ -1060,6 +1114,7 @@ export default function Trangdangky({ route }) {
       }),
     }));
   };
+  //* View DS đối tượng ưu tiên
   const DSDoiTuongUuTien = () => {
     return (
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -1137,13 +1192,21 @@ export default function Trangdangky({ route }) {
                         >
                           <CheckBox
                             style={{ alignSelf: "center" }}
-                            value={itemChild.check}
+                            // value={}
                             tintColors={{ true: "#ff4646", false: "#008577" }}
                             // onValueChange={setData(false)}
                             onValueChange={(value) =>
                               value
-                                ? Them_DoiTuongUuTien(indexParent, indexChild)
-                                : Xoa_DoiTuongUuTien(indexParent, indexChild)
+                                ? Them_DoiTuongUuTien(
+                                    indexParent,
+                                    indexChild,
+                                    value
+                                  )
+                                : Xoa_DoiTuongUuTien(
+                                    indexParent,
+                                    indexChild,
+                                    value
+                                  )
                             }
                           />
                           <Text
@@ -1190,6 +1253,8 @@ export default function Trangdangky({ route }) {
       </Modal>
     );
   };
+  //#endregion
+
   //#region API - Push: Đăng ký
   //* Đăng ký
   const DangKy = async () => {
@@ -1717,11 +1782,9 @@ export default function Trangdangky({ route }) {
           >
             {/* Đăng ký nguyện vọng */}
             <View style={styles.box}>
-              {/* <Text>
-                  Lưu ý: Nhấn vào nút Nguyện vọng hoặc điền mã trường để lấy tên
-                  trường
-                </Text> */}
-              <ListNV />
+              <ScrollView nestedScrollEnabled style={{ maxHeight: 400 }}>
+                <ListNV />
+              </ScrollView>
             </View>
           </View>
         </View>
@@ -1835,11 +1898,7 @@ export default function Trangdangky({ route }) {
                     icon="camera"
                     color={Colors.red500}
                     size={25}
-                    // onPress={() => _pickImg()}
-                    onPress={() => DangKy()}
-                    // onPress={() => {
-                    //   navigation.navigate("Images");
-                    // }}
+                    onPress={() => console.log(data.NguyenVong)}
                   />
                   {/*--------Camera--------*/}
                   <View
