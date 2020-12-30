@@ -1,5 +1,6 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Text, View, TextInput, StyleSheet, Alert } from "react-native";
+import { IconButton, Colors } from "react-native-paper";
 
 //* Giới hạn độ dài input
 const MaxLength = (value, lenght) => {
@@ -9,6 +10,7 @@ const MaxLength = (value, lenght) => {
   }
 };
 const Inputs = (props) => {
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   let view;
   props.checkboxValue.map((checkbox, i) => {
     //* Kiểm tra ô nào check
@@ -45,15 +47,37 @@ const Inputs = (props) => {
                   props.updateValue(value, 1);
                 }}
               />
-              <TextInput
-                style={styles.input}
-                secureTextEntry
-                value={checkbox.value2}
-                placeholder="Nhập mật khẩu"
-                keyboardType="default"
-                multiline={false}
-                onChangeText={(value) => props.updateValue(value, 2)}
-              />
+              <View
+                style={{
+                  borderRadius: 20,
+                  borderColor: "#008577",
+                  borderWidth: 1,
+                  height: 40,
+                  marginTop: "2%",
+                  flexDirection: "row",
+                }}
+              >
+                <TextInput
+                  style={{
+                    paddingLeft: 20,
+                    fontSize: 20,
+                    flexGrow: 1,
+                    alignSelf: "center",
+                  }}
+                  secureTextEntry={secureTextEntry}
+                  value={checkbox.value2}
+                  placeholder="Nhập mật khẩu"
+                  keyboardType="default"
+                  multiline={false}
+                  onChangeText={(value) => props.updateValue(value, 2)}
+                />
+                <IconButton
+                  icon="eye"
+                  color={Colors.red500}
+                  size={18}
+                  onPress={() => setSecureTextEntry(!secureTextEntry)}
+                />
+              </View>
             </View>
           ));
         case 2:
