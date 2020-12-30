@@ -93,35 +93,6 @@ export default function ComboBox() {
     return check ? (status ? true : false) : false;
   };
   //* Cập nhật value
-  //#region Hàm update với logic cũ
-  // const updateValue = (value, checkIndex, valueIndex) => {
-  //   const newValue = checkboxValue.map((checkbox, i) => {
-  //     switch (checkIndex) {
-  //       case 0:
-  //         return {
-  //           ...checkbox,
-  //           value1: value,
-  //         };
-  //       case 1:
-  //         return valueIndex == 1
-  //           ? {
-  //               ...checkbox,
-  //               value1: value,
-  //             }
-  //           : {
-  //               ...checkbox,
-  //               value2: value,
-  //             };
-  //       case 2:
-  //         return {
-  //           ...checkbox,
-  //           value1: value,
-  //         };
-  //     }
-  //   });
-  //   setCheckboxValue(newValue);
-  // };
-  //#endregion
   const updateValue = (value, valueIndex) => {
     const newValue = checkboxValue.map((checkbox, i) => {
       return checkbox.checked
@@ -161,45 +132,45 @@ export default function ComboBox() {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.checkBoxContainer}>
-        {/* Checkbox */}
-        {checkboxValue.map((checkbox, i) => (
-          <View key={i} style={styles.perCheckContainer}>
-            <CheckBox
-              style={styles.checkbox}
-              value={checkbox.checked}
-              tintColors={{ true: "#ff4646", false: "#008577" }}
-              onValueChange={(value) => checkboxHandler(value, i)}
-            />
-            <Text style={styles.label}>{"" + checkbox.label + ""}</Text>
-          </View>
-        ))}
-      </View>
-      {/* Input */}
-      <View style={styles.inputContainer}>
-        <Inputs checkboxValue={checkboxValue} updateValue={updateValue} />
-        {/* <Text>0: {checkboxValue[0].value1}</Text>
-        <Text>1: {checkboxValue[1].value1}</Text>
-        <Text>1: {checkboxValue[1].value2}</Text>
-        <Text>2: {checkboxValue[2].value1}</Text> */}
-      </View>
-      {/* Button */}
-      <View style={[styles.inputContainer, { borderSize: 0, borderColor: "" }]}>
-        <Button
-          round
-          style={styles.button2}
-          color="#61b15a"
-          onPress={() => {
-            onSubmit()
-              ? navigation.navigate("Ketqua", {
-                  data: data,
-                })
-              : Alert.alert("Mời bạn chọn loại tra cứu trước");
-          }}
-          // onPress={() => onSubmit()}
+      <View style={styles.block}>
+        <View style={styles.checkBoxContainer}>
+          {/* Checkbox */}
+          {checkboxValue.map((checkbox, i) => (
+            <View key={i} style={styles.perCheckContainer}>
+              <CheckBox
+                style={styles.checkbox}
+                value={checkbox.checked}
+                tintColors={{ true: "#ff4646", false: "#008577" }}
+                onValueChange={(value) => checkboxHandler(value, i)}
+              />
+              <Text style={styles.label}>{"" + checkbox.label + ""}</Text>
+            </View>
+          ))}
+        </View>
+        {/* Input */}
+        <View style={styles.inputContainer}>
+          <Inputs checkboxValue={checkboxValue} updateValue={updateValue} />
+        </View>
+        {/* Button */}
+        <View
+          style={[styles.inputContainer, { borderSize: 0, borderColor: "" }]}
         >
-          Tra cứu
-        </Button>
+          <Button
+            round
+            style={styles.button}
+            color="#61b15a"
+            onPress={() => {
+              onSubmit()
+                ? navigation.navigate("Ketqua", {
+                    data: data,
+                  })
+                : Alert.alert("Mời bạn chọn loại tra cứu trước");
+            }}
+            // onPress={() => onSubmit()}
+          >
+            Tra cứu
+          </Button>
+        </View>
       </View>
     </View>
   );
@@ -207,23 +178,18 @@ export default function ComboBox() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: "5%",
-    marginBottom: "5%",
-    width: "94%",
-    backgroundColor: "#d6e0f0",
-    // borderColor: "blue",d6e0f0,9ad3bc
-    // borderWidth: 1,
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FFFF",
+  },
+  block: {
+    width: "90%",
+    backgroundColor: "#FFFF",
     alignItems: "center",
     //* bóng mờ
-    borderBottomRightRadius: 25,
-    borderTopRightRadius: 25,
-
-    borderRightWidth: 1,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-
-    borderColor: "#fff3e2",
-
+    borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -237,23 +203,11 @@ const styles = StyleSheet.create({
   checkBoxContainer: {
     alignItems: "stretch",
     marginTop: "7%",
-    marginLeft: "5%",
-    marginRight: "5%",
     width: "80%",
   },
   perCheckContainer: {
     backgroundColor: "#FFFFFF",
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-
-    borderLeftWidth: 2,
-    borderBottomWidth: 1.2,
-    borderRightWidth: 2,
-    borderTopWidth: 1.2,
-
-    borderColor: "#f1f1f1",
+    borderRadius: 10,
 
     alignItems: "stretch",
     flexDirection: "row",
@@ -271,7 +225,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     alignItems: "stretch",
-    width: "95%",
+    width: "90%",
     margin: "2%",
   },
   checkbox: {
@@ -281,21 +235,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingTop: "5.7%",
   },
-  button1: {
-    marginLeft: "10%",
-    marginBottom: "5%",
-    alignSelf: "center",
-    borderRadius: 25,
-    shadowColor: "rgba(46, 229, 157, 0.4)",
-    shadowOpacity: 1.5,
-    elevation: 8,
-    shadowRadius: 20,
-    shadowOffset: { width: 1, height: 13 },
-    backgroundColor: "#2EE59D",
-    color: "#FFFFFF",
-  },
-  button2: {
-    marginLeft: "10%",
+  button: {
     marginBottom: "5%",
     alignSelf: "center",
     borderRadius: 25,

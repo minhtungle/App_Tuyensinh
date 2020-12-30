@@ -8,24 +8,11 @@ function Tracuuketquatuyensinh() {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <View style={styles.InContainer}>
-        <ComboBox />
-      </View>
-      <View style={styles.OutContainer}></View>
+      <ComboBox />
     </View>
   );
 }
 const styles = StyleSheet.create({
   container: {},
-  InContainer: {
-    alignItems: "flex-start",
-    width: "100%",
-  },
-
-  OutContainer: {
-    alignItems: "flex-end",
-    width: "100%",
-    height: "35%",
-  },
 });
 export default Tracuuketquatuyensinh;

@@ -79,20 +79,11 @@ const Inputs = (props) => {
   return view || null;
 };
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "stretch",
-    width: "100%",
-    borderColor: "red",
-    borderWidth: 1,
-    margin: "2%",
-  },
   input: {
     borderRadius: 20,
     borderColor: "#008577",
     borderWidth: 1,
     height: 40,
-    marginLeft: "10%",
-    marginRight: "1%",
     marginTop: "2%",
     paddingLeft: 20,
     fontSize: 20,
