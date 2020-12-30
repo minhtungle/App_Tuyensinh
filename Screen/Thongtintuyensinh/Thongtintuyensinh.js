@@ -296,6 +296,7 @@ export default function Thongtintuyensinh() {
             alert("Không tải được tệp");
           });
         }}
+        key={props.key}
       >
         {props.title}
       </Button>
@@ -512,10 +513,15 @@ export default function Thongtintuyensinh() {
               >
                 {data.ketqua.length !== 0 ? (
                   <View>
-                    <ExternalLinkBtn
-                      title={data.ketqua[0].tieuDe}
-                      url={data.ketqua[0].fileDinhkem}
-                    />
+                    {data.ketqua.map((item, index) => {
+                      return (
+                        <ExternalLinkBtn
+                          title={item.tieuDe}
+                          url={item.fileDinhkem}
+                          key={index}
+                        />
+                      );
+                    })}
                   </View>
                 ) : (
                   <View

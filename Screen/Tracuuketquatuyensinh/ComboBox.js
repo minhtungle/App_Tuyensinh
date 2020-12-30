@@ -9,7 +9,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 export default function ComboBox() {
   //* State :
   const navigation = useNavigation();
-  const [checkboxValue, setCheckboxValue] = React.useState([
+  const [checkboxValue, setCheckboxValue] = useState([
     {
       label: "Mã hồ sơ tuyển sinh",
       value1: "",
@@ -24,7 +24,7 @@ export default function ComboBox() {
       checked: false,
     },
   ]);
-  const [data, setData] = React.useState();
+  const [data, setData] = useState();
   //* Lấy API
   const getApi = async (type, value1, value2) => {
     let mahoso = "",
@@ -51,10 +51,6 @@ export default function ComboBox() {
     let a = results.data;
 
     setData(a);
-    // console.log(type, value1, value2);
-    // console.log(mahoso, mahocsinh, sbd);
-    // console.log(URL);
-    // console.log(data);
   };
   //TODO Kiểm tra lại điều kiện chỗ checkboxValue[1] tại sao chỉ check null của ô 1
   //* Kiểm tra value tại ô đó có rỗng không
@@ -161,10 +157,14 @@ export default function ComboBox() {
             color="#61b15a"
             onPress={() => {
               onSubmit()
-                ? navigation.navigate("Ketqua", {
-                    data: data,
-                  })
-                : Alert.alert("Mời bạn chọn loại tra cứu trước");
+                ? data != null || undefined
+                  ? navigation.navigate("Ketqua", {
+                      data: data,
+                    })
+                  : Alert.alert("Mời bạn chọn loại tra cứu trước")
+                : Alert.alert(
+                    "Không tồn tại kết quả tra cứu ! Vui lòng kiểm tra lại thông tin đã nhập "
+                  );
             }}
             // onPress={() => onSubmit()}
           >
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     flexDirection: "row",
     marginBottom: 10,
-    marginLeft: "10%",
+
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
