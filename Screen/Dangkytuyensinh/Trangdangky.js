@@ -21,10 +21,37 @@ import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 
+function useInput() {
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
+  };
+  return {
+    date,
+    showDatepicker,
+    show,
+    mode,
+    onChange,
+  };
+}
 export default function Trangdangky({ route }) {
   const { DoiTuongTuyenSinh } = route.params;
   const navigation = useNavigation();
-
+  const input = useInput(new Date());
+  const input2 = useInput(new Date());
   const [data, setData] = useState({
     MaHocSinh: "",
     MatKhau: "",
@@ -59,11 +86,11 @@ export default function Trangdangky({ route }) {
     DanhSachFileDinhKem: [],
 
     HoTenMe: "",
-    NgaySinhMe: "",
+    NgaySinhMe: new Date(),
     CMNDMe: "",
 
     HoTenCha: "",
-    NgaySinhCha: "",
+    NgaySinhCha: new Date(),
     CMNDCha: "",
 
     HoTenNguoiGiamHo: "",
@@ -434,6 +461,9 @@ export default function Trangdangky({ route }) {
       ),
     }));
   };
+  const KiemtraNV = (itemChild) => {
+    return data.NguyenVong.some((item) => item === itemChild);
+  };
   //* List nguyện vọng
   const ListNV = () =>
     data.NguyenVong.map((itemParent, indexParent) => {
@@ -530,18 +560,16 @@ export default function Trangdangky({ route }) {
           >
             {/*--------- Top ---------*/}
             <View>
-              <TouchableOpacity onPress={() => {}}>
-                <Text
-                  style={{
-                    padding: 8,
-                    textAlignVertical: "center",
-                    textAlign: "center",
-                  }}
-                  numberOfLines={1}
-                >
-                  Nguyện vọng {indexParent + 1}
-                </Text>
-              </TouchableOpacity>
+              <Text
+                style={{
+                  padding: 8,
+                  textAlignVertical: "center",
+                  textAlign: "center",
+                }}
+                numberOfLines={1}
+              >
+                Nguyện vọng {indexParent + 1}
+              </Text>
             </View>
             {/*--------- Bottom -------*/}
             <View style={{ borderTopWidth: 1 }}>
@@ -553,6 +581,9 @@ export default function Trangdangky({ route }) {
                 }
               >
                 {picker.NguyenVong.map((itemChild, indexChild) => {
+                  KiemtraNV(itemChild)
+                    ? console.log("trùng")
+                    : console.log("ko trùng");
                   return (
                     <Picker.Item
                       key={indexChild.toString()}
@@ -588,15 +619,15 @@ export default function Trangdangky({ route }) {
   //#endregion
 
   //#region DatePicker
+
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || data.NgaySinh;
+  const onChange = (event, selectedDate, who) => {
+    const currentDate = selectedDate;
     setShow(Platform.OS === "ios");
     changeValuePicker({ NgaySinh: currentDate });
   };
-
   const showMode = (currentMode) => {
     setShow(true);
     setMode(currentMode);
@@ -609,6 +640,7 @@ export default function Trangdangky({ route }) {
   const showTimepicker = () => {
     showMode("time");
   };
+
   //#endregion
 
   //#region Pass: Ẩn hiện
@@ -1060,7 +1092,13 @@ export default function Trangdangky({ route }) {
       .catch((error) => {
         setPicker((prevState) => ({
           ...prevState,
-          NguyenVong: [],
+          NguyenVong: [
+            {
+              ID: 0,
+              MaTruong: "Chọn trường",
+              TenTruong: "...",
+            },
+          ],
         }));
       });
   }, [data.IDTinhTT]);
@@ -1155,6 +1193,7 @@ export default function Trangdangky({ route }) {
                       paddingVertical: 20,
                       flexDirection: "column",
                     }}
+                    key={indexParent.toString()}
                   >
                     <Text
                       style={{
@@ -1317,7 +1356,7 @@ export default function Trangdangky({ route }) {
   };
   //#endregion
   return (
-    <ScrollView>
+    <ScrollView keyboardDismissMode="on-drag">
       <View style={styles.container}>
         {/* -------------Thông tin học sinh------------- */}
         <View style={styles.block}>
@@ -1425,9 +1464,7 @@ export default function Trangdangky({ route }) {
                     style={{
                       flexGrow: 1,
                       alignSelf: "center",
-
                       fontSize: 18,
-
                       paddingLeft: 5,
                     }}
                   >
@@ -1441,14 +1478,13 @@ export default function Trangdangky({ route }) {
                   />
                   {show && (
                     <DateTimePicker
-                      testID="dateTimePicker"
                       value={data.NgaySinh}
                       mode={mode}
-                      is24Hour={true}
+                      is24Hour={false}
                       display="default"
-                      onChange={onChange}
-                      // onConfirm={handleConfirm}
-                      // onCancel={handleCancel}
+                      onChange={(event, selectedDate) =>
+                        onChange(event, selectedDate, "Con")
+                      }
                     />
                   )}
                 </View>
@@ -1898,7 +1934,7 @@ export default function Trangdangky({ route }) {
                     icon="camera"
                     color={Colors.red500}
                     size={25}
-                    onPress={() => console.log(data.NguyenVong)}
+                    onPress={() => console.log(data)}
                   />
                   {/*--------Camera--------*/}
                   <View
@@ -1925,6 +1961,107 @@ export default function Trangdangky({ route }) {
                   </View>
                 </View>
               </View>
+            </View>
+          </View>
+        </View>
+        {/* -------------Thông tin cha mẹ, người giám hộ------------- */}
+        <View style={styles.block}>
+          <View style={styles.title}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "bold",
+                color: "#145374",
+                flexGrow: 1,
+                textAlign: "center",
+              }}
+            >
+              Thông tin cha mẹ, người giám hộ
+            </Text>
+          </View>
+          <View
+            style={{
+              backgroundColor: "white",
+              paddingTop: "10%",
+              borderColor: "white",
+              borderRadius: 15,
+              borderWidth: 0,
+              margin: 20,
+              padding: "5%",
+            }}
+          >
+            <View style={styles.box}>
+              {/*//? THÔNG TIN MẸ ---------------------------------*/}
+              <Text style={{ fontSize: 18, fontWeight: "bold", margin: "2%" }}>
+                THÔNG TIN MẸ :
+              </Text>
+              {/* Họ và tên */}
+              <View style={styles.field}>
+                <Text>Họ và tên</Text>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={(value) =>
+                    changeValuePicker({ HoTenMe: value })
+                  }
+                >
+                  {data.HoTenMe}
+                </TextInput>
+              </View>
+              {/* Số CMND/Thẻ căn cước */}
+              <View style={styles.field}>
+                <Text>Số CMND/Thẻ căn cước</Text>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={(value) => changeValuePicker({ CMNDMe: value })}
+                >
+                  {data.CMNDMe}
+                </TextInput>
+              </View>
+              {/* Ngày sinh */}
+              <View style={styles.field}>
+                <Text>Ngày sinh</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    borderLeftWidth: 0.5,
+                    borderBottomWidth: 0.5,
+                  }}
+                >
+                  <Text
+                    style={{
+                      flexGrow: 1,
+                      alignSelf: "center",
+
+                      fontSize: 18,
+
+                      paddingLeft: 5,
+                    }}
+                  >
+                    {data.NgaySinhMe.toDateString()}
+                  </Text>
+                  <IconButton
+                    icon="calendar"
+                    color={Colors.red500}
+                    size={18}
+                    onPress={showDatepicker}
+                  />
+                  {show && (
+                    <DateTimePicker
+                      value={data.NgaySinhMe}
+                      mode={mode}
+                      is24Hour={true}
+                      display="default"
+                      onChange={(event, selectedDate) =>
+                        onChangeMe(event, selectedDate, "Me")
+                      }
+                    />
+                  )}
+                </View>
+              </View>
+              {/*//? THÔNG TIN CHA ---------------------------------*/}
+              <Text style={{ fontSize: 18, fontWeight: "bold", margin: "2%" }}>
+                THÔNG TIN CHA :
+              </Text>
             </View>
           </View>
         </View>
